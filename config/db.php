@@ -7,23 +7,35 @@
 // Disable throwing uncaught mysqli exceptions in PHP 8.1+
 mysqli_report(MYSQLI_REPORT_OFF);
 
-$host = getenv('DB_HOST') ?: "localhost";
+$host = getenv('DB_HOST') ?: "127.0.0.1";
 $user = getenv('DB_USER') ?: "root";
 $password = getenv('DB_PASSWORD') !== false ? getenv('DB_PASSWORD') : "";
 $database = getenv('DB_NAME') ?: "student_portal";
 $port = getenv('DB_PORT') ? (int)getenv('DB_PORT') : 3306;
 
-// Attempt connection
+// Attempt primary connection via TCP
 try {
     $con = @mysqli_connect($host, $user, $password, $database, $port);
 } catch (Throwable $e) {
     $con = false;
 }
 
-// Fallback to college_website if student_portal was not found on local
-if (!$con && $host === "localhost") {
+// Fallback to localhost socket if 127.0.0.1 failed
+if (!$con && ($host === "127.0.0.1" || $host === "localhost")) {
     try {
-        $con = @mysqli_connect($host, $user, $password, "college_website", $port);
+        $con = @mysqli_connect("localhost", $user, $password, $database, $port);
+    } catch (Throwable $e) {
+        $con = false;
+    }
+}
+
+// Fallback to college_website database if student_portal was not found
+if (!$con && ($host === "127.0.0.1" || $host === "localhost")) {
+    try {
+        $con = @mysqli_connect("127.0.0.1", $user, $password, "college_website", $port);
+        if (!$con) {
+            $con = @mysqli_connect("localhost", $user, $password, "college_website", $port);
+        }
         if ($con) {
             $database = "college_website";
         }

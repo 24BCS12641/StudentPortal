@@ -10,35 +10,44 @@ sed -i "s/:80/:${PORT}/g" /etc/apache2/sites-available/000-default.conf
 
 # If no external cloud DB_HOST is set, start the built-in MariaDB server
 if [ -z "$DB_HOST" ] || [ "$DB_HOST" = "localhost" ] || [ "$DB_HOST" = "127.0.0.1" ]; then
-    echo "Starting internal MariaDB service..."
-    service mariadb start || /etc/init.d/mariadb start
+    echo "Setting up MariaDB runtime directories..."
+    mkdir -p /run/mysqld /var/run/mysqld /var/lib/mysql /var/log/mysql /tmp
+    chown -R mysql:mysql /run/mysqld /var/run/mysqld /var/lib/mysql /var/log/mysql
+    chmod 777 /run/mysqld /var/run/mysqld /tmp
 
-    # Wait for MariaDB to become ready
+    if [ ! -d "/var/lib/mysql/mysql" ]; then
+        echo "Initializing MariaDB system tables..."
+        mariadb-install-db --user=mysql --datadir=/var/lib/mysql >/dev/null 2>&1 || mysql_install_db --user=mysql --datadir=/var/lib/mysql >/dev/null 2>&1 || true
+    fi
+
+    echo "Starting MariaDB server daemon on 127.0.0.1:3306..."
+    if [ -x "/usr/sbin/mariadbd" ]; then
+        /usr/sbin/mariadbd --user=mysql --skip-grant-tables --skip-name-resolve --bind-address=0.0.0.0 &
+    elif [ -x "/usr/sbin/mysqld" ]; then
+        /usr/sbin/mysqld --user=mysql --skip-grant-tables --skip-name-resolve --bind-address=0.0.0.0 &
+    else
+        service mariadb start || /etc/init.d/mariadb start || true
+    fi
+
+    # Wait up to 30 seconds for MariaDB TCP port 3306
+    echo "Waiting for MariaDB port 3306 to respond..."
     for i in {1..30}; do
-        if mysqladmin ping --silent 2>/dev/null; then
-            echo "MariaDB is ready!"
+        if mysqladmin --protocol=tcp -h 127.0.0.1 -u root ping --silent 2>/dev/null; then
+            echo "MariaDB is successfully responding on 127.0.0.1:3306!"
             break
         fi
         sleep 1
     done
 
-    # Allow passwordless root connection from localhost for www-data (Apache)
-    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD(''); FLUSH PRIVILEGES;" 2>/dev/null || \
-    mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '' WITH GRANT OPTION; FLUSH PRIVILEGES;" 2>/dev/null || true
-
-    # Check and import student_portal database if not present
-    if ! mysql -e "USE student_portal; SELECT 1 FROM users LIMIT 1;" 2>/dev/null; then
-        echo "Creating and populating student_portal database..."
-        mysql -e "CREATE DATABASE IF NOT EXISTS student_portal DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-        mysql student_portal < /var/www/html/database/student_portal.sql 2>/dev/null || true
-        mysql student_portal < /var/www/html/database/sample_data.sql 2>/dev/null || true
-        echo "student_portal database successfully initialized!"
-    else
-        echo "student_portal database is already initialized."
-    fi
+    # Create and import student_portal database
+    echo "Verifying student_portal database in MariaDB..."
+    mysql --protocol=tcp -h 127.0.0.1 -u root -e "CREATE DATABASE IF NOT EXISTS student_portal DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null || true
+    mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/student_portal.sql 2>/dev/null || true
+    mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/sample_data.sql 2>/dev/null || true
+    echo "Database initialization finished successfully!"
 else
-    echo "External database host detected: ${DB_HOST}. Skipping internal MariaDB."
+    echo "External cloud database host detected: ${DB_HOST}. Skipping internal MariaDB."
 fi
 
-echo "EduPortal: Apache listening on port ${PORT}..."
+echo "EduPortal: Starting Apache on port ${PORT}..."
 exec "$@"
