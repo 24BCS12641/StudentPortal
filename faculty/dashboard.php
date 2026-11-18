@@ -121,7 +121,10 @@ include("../includes/navbar.php");
                 <i class="fa-solid fa-plus-circle"></i> Create Assignment
             </a>
             <a href="mark_attendance.php" class="btn btn-secondary">
-                <i class="fa-solid fa-user-check"></i> Mark Attendance
+                <i class="fa-solid fa-clipboard-user"></i> Class Attendance
+            </a>
+            <a href="manage_results.php" class="btn btn-secondary">
+                <i class="fa-solid fa-graduation-cap"></i> Upload Exam Marks
             </a>
             <a href="view_submissions.php" class="btn btn-secondary">
                 <i class="fa-solid fa-inbox"></i> Review Submissions

@@ -48,7 +48,15 @@ if [ -z "$DB_HOST" ] || [ "$DB_HOST" = "localhost" ] || [ "$DB_HOST" = "127.0.0.
     fi
     mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/student_portal.sql 2>/dev/null || true
     mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/sample_data.sql 2>/dev/null || true
-    echo "Database initialization finished successfully!"
+    
+    # Ensure modern columns exist across environments
+    mysql --protocol=tcp -h 127.0.0.1 -u root student_portal -e "
+        ALTER TABLE students ADD COLUMN IF NOT EXISTS department_id INT DEFAULT 1;
+        ALTER TABLE students ADD COLUMN IF NOT EXISTS course_id INT DEFAULT 1;
+        ALTER TABLE attendance ADD COLUMN IF NOT EXISTS marked_by INT DEFAULT NULL;
+        ALTER TABLE attendance ADD COLUMN IF NOT EXISTS remarks VARCHAR(255) DEFAULT NULL;
+    " 2>/dev/null || true
+    echo "Database initialization and schema upgrade finished successfully!"
 else
     echo "External cloud database host detected: ${DB_HOST}. Skipping internal MariaDB."
 fi

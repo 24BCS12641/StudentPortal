@@ -1,26 +1,49 @@
 <?php
 /**
- * Add Student
- * EduPortal Management System
+ * Add Student - With Department & Degree Course Assignment
+ * Apex Imperial University Portal
  */
 
 include("../config/auth.php");
 include("../config/db.php");
 check_role('admin');
 
-$page_title = "Add New Student";
+$page_title = "Enroll New Student";
 $error = "";
 
+// Fetch departments & courses
+$depts = [];
+$d_res = mysqli_query($con, "SELECT department_id, name, code, icon FROM departments ORDER BY department_id ASC");
+while ($d = mysqli_fetch_assoc($d_res)) {
+    $depts[] = $d;
+}
+
+$courses = [];
+$c_res = mysqli_query($con, "SELECT course_id, department_id, name, code FROM courses ORDER BY name ASC");
+while ($c = mysqli_fetch_assoc($c_res)) {
+    $courses[] = $c;
+}
+
 if (isset($_POST['add_student'])) {
-    $name = escape($con, $_POST['name']);
-    $email = escape($con, $_POST['email']);
+    $name = escape($con, trim($_POST['name']));
+    $email = escape($con, trim($_POST['email']));
     $password = $_POST['password'];
-    $roll_no = escape($con, $_POST['roll_no']);
-    $course = escape($con, $_POST['course']);
+    $roll_no = escape($con, trim($_POST['roll_no']));
+    $department_id = (int)$_POST['department_id'];
+    $course_id = (int)$_POST['course_id'];
     $semester = (int)$_POST['semester'];
 
-    if (empty($name) || empty($email) || empty($password) || empty($roll_no)) {
-        $error = "Please fill in all required fields.";
+    // Get course name/code
+    $course_code = 'BCA';
+    foreach ($courses as $crs) {
+        if ($crs['course_id'] == $course_id) {
+            $course_code = $crs['code'];
+            break;
+        }
+    }
+
+    if (empty($name) || empty($email) || empty($password) || empty($roll_no) || $department_id <= 0) {
+        $error = "Please fill in all required fields and select a department.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Please enter a valid email address.";
     } else {
@@ -29,40 +52,46 @@ if (isset($_POST['add_student'])) {
         if (mysqli_num_rows($check) > 0) {
             $error = "A user account with email '$email' already exists.";
         } else {
-            // Handle profile picture upload
-            $profile_picture = "";
-            if (!empty($_FILES['profile_picture']['name'])) {
-                $ext = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
-                $allowed = ['jpg', 'jpeg', 'png', 'webp'];
-                if (in_array($ext, $allowed)) {
-                    $profile_picture = time() . "_" . uniqid() . "." . $ext;
-                    if (!is_dir("../uploads/profile_pictures")) {
-                        mkdir("../uploads/profile_pictures", 0777, true);
+            // Check duplicate roll number
+            $check_roll = mysqli_query($con, "SELECT student_id FROM students WHERE roll_no='$roll_no' LIMIT 1");
+            if (mysqli_num_rows($check_roll) > 0) {
+                $error = "A student with Roll Number '$roll_no' is already registered.";
+            } else {
+                // Profile picture upload
+                $profile_picture = "";
+                if (!empty($_FILES['profile_picture']['name'])) {
+                    $ext = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
+                    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+                    if (in_array($ext, $allowed)) {
+                        $profile_picture = time() . "_" . uniqid() . "." . $ext;
+                        if (!is_dir("../uploads/profile_pictures")) {
+                            mkdir("../uploads/profile_pictures", 0777, true);
+                        }
+                        move_uploaded_file($_FILES['profile_picture']['tmp_name'], "../uploads/profile_pictures/" . $profile_picture);
+                    } else {
+                        $error = "Only JPG, PNG, and WEBP formats are allowed for profile photos.";
                     }
-                    move_uploaded_file($_FILES['profile_picture']['tmp_name'], "../uploads/profile_pictures/" . $profile_picture);
-                } else {
-                    $error = "Only JPG, PNG, and WEBP image formats are supported for profile photos.";
                 }
-            }
 
-            if (empty($error)) {
-                $insert_user = mysqli_query($con, "
-                    INSERT INTO users (name, email, password, role, profile_picture)
-                    VALUES ('$name', '$email', '$password', 'student', '$profile_picture')
-                ");
-
-                if ($insert_user) {
-                    $user_id = mysqli_insert_id($con);
-                    mysqli_query($con, "
-                        INSERT INTO students (user_id, roll_no, course, semester, profile_picture)
-                        VALUES ('$user_id', '$roll_no', '$course', '$semester', '$profile_picture')
+                if (empty($error)) {
+                    $insert_user = mysqli_query($con, "
+                        INSERT INTO users (name, email, password, role, profile_picture)
+                        VALUES ('$name', '$email', '$password', 'student', '$profile_picture')
                     ");
 
-                    set_flash("success", "Student '$name' has been successfully enrolled!");
-                    header("Location: manage_students.php");
-                    exit();
-                } else {
-                    $error = "Database Error: " . mysqli_error($con);
+                    if ($insert_user) {
+                        $user_id = mysqli_insert_id($con);
+                        mysqli_query($con, "
+                            INSERT INTO students (user_id, roll_no, department_id, course_id, course, semester, profile_picture)
+                            VALUES ('$user_id', '$roll_no', '$department_id', '$course_id', '$course_code', '$semester', '$profile_picture')
+                        ");
+
+                        set_flash("success", "Student '$name' ($roll_no) has been successfully enrolled into Department!");
+                        header("Location: manage_students.php?dept=" . $department_id);
+                        exit();
+                    } else {
+                        $error = "Database Error: " . mysqli_error($con);
+                    }
                 }
             }
         }
@@ -74,9 +103,9 @@ include("../includes/sidebar_admin.php");
 include("../includes/navbar.php");
 ?>
 
-<div class="card" style="max-width: 800px; margin: 0 auto;">
+<div class="card" style="max-width: 820px; margin: 0 auto;">
     <div class="card-header">
-        <h3><i class="fa-solid fa-user-plus"></i> Enroll New Student</h3>
+        <h3><i class="fa-solid fa-user-plus text-primary"></i> Enroll New Student &bull; Department Assignment</h3>
         <a href="manage_students.php" class="btn btn-outline btn-sm">
             <i class="fa-solid fa-arrow-left"></i> Back to Directory
         </a>
@@ -105,7 +134,7 @@ include("../includes/navbar.php");
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Login Password <span class="required">*</span></label>
-                    <input type="text" name="password" class="form-control" placeholder="Create temporary or permanent password" required value="<?php echo isset($_POST['password']) ? htmlspecialchars($_POST['password']) : 'student123'; ?>">
+                    <input type="text" name="password" class="form-control" required value="<?php echo isset($_POST['password']) ? htmlspecialchars($_POST['password']) : 'student123'; ?>">
                 </div>
 
                 <div class="form-group">
@@ -114,14 +143,36 @@ include("../includes/navbar.php");
                 </div>
             </div>
 
+            <!-- Department & Course Assignment -->
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">Course / Degree Program <span class="required">*</span></label>
-                    <input type="text" name="course" class="form-control" placeholder="e.g. BCA, B.Tech CSE" required value="<?php echo isset($_POST['course']) ? htmlspecialchars($_POST['course']) : 'BCA'; ?>">
+                    <label class="form-label">Department / School <span class="required">*</span></label>
+                    <select name="department_id" id="deptSelect" class="form-control" required onchange="filterCourses()">
+                        <option value="">-- Select Academic Department --</option>
+                        <?php foreach ($depts as $d): ?>
+                            <option value="<?php echo $d['department_id']; ?>" <?php if (isset($_POST['department_id']) && $_POST['department_id'] == $d['department_id']) echo 'selected'; ?>>
+                                <?php echo htmlspecialchars($d['name']); ?> (<?php echo $d['code']; ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Semester <span class="required">*</span></label>
+                    <label class="form-label">Degree Program / Course <span class="required">*</span></label>
+                    <select name="course_id" id="courseSelect" class="form-control" required>
+                        <option value="">-- Select Degree Course --</option>
+                        <?php foreach ($courses as $c): ?>
+                            <option value="<?php echo $c['course_id']; ?>" data-dept="<?php echo $c['department_id']; ?>" <?php if (isset($_POST['course_id']) && $_POST['course_id'] == $c['course_id']) echo 'selected'; ?>>
+                                <?php echo htmlspecialchars($c['name']); ?> (<?php echo $c['code']; ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Enrolled Semester <span class="required">*</span></label>
                     <select name="semester" class="form-control" required>
                         <?php for ($s = 1; $s <= 8; $s++): ?>
                             <option value="<?php echo $s; ?>" <?php echo (isset($_POST['semester']) && $_POST['semester'] == $s) ? 'selected' : ($s == 1 ? 'selected' : ''); ?>>
@@ -129,6 +180,11 @@ include("../includes/navbar.php");
                             </option>
                         <?php endfor; ?>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Academic Status</label>
+                    <input type="text" class="form-control" value="Active Enrolled" readonly style="background:#f8fafc;">
                 </div>
             </div>
 
@@ -145,11 +201,28 @@ include("../includes/navbar.php");
             <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:25px;">
                 <a href="manage_students.php" class="btn btn-secondary">Cancel</a>
                 <button type="submit" name="add_student" class="btn btn-primary">
-                    <i class="fa-solid fa-check"></i> Enroll Student
+                    <i class="fa-solid fa-check"></i> Complete Student Enrollment
                 </button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+function filterCourses() {
+    var deptId = document.getElementById('deptSelect').value;
+    var courseSelect = document.getElementById('courseSelect');
+    var options = courseSelect.querySelectorAll('option');
+
+    for (var i = 1; i < options.length; i++) {
+        var opt = options[i];
+        if (!deptId || opt.getAttribute('data-dept') === deptId) {
+            opt.style.display = '';
+        } else {
+            opt.style.display = 'none';
+        }
+    }
+}
+</script>
 
 <?php include("../includes/footer.php"); ?>
