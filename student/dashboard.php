@@ -24,25 +24,29 @@ $st_query = mysqli_query($con, "
 $student = mysqli_fetch_assoc($st_query);
 $student_id = $student['student_id'] ?? 0;
 
-// Metrics
-$total_subjects = mysqli_num_rows(mysqli_query($con, "SELECT * FROM subjects"));
-$total_assignments = mysqli_num_rows(mysqli_query($con, "SELECT * FROM assignments"));
-$total_materials = mysqli_num_rows(mysqli_query($con, "SELECT * FROM study_materials"));
+// Metrics (Safe & Resilient)
+$total_subjects = safe_count($con, "subjects");
+$total_assignments = safe_count($con, "assignments");
+$total_materials = safe_count($con, "study_materials");
 
 // Attendance
-$total_att = mysqli_num_rows(mysqli_query($con, "SELECT * FROM attendance WHERE student_id='$student_id'"));
-$present_att = mysqli_num_rows(mysqli_query($con, "SELECT * FROM attendance WHERE student_id='$student_id' AND status='Present'"));
+$total_att = safe_count($con, "attendance", "student_id='$student_id'");
+$present_att = safe_count($con, "attendance", "student_id='$student_id' AND status='Present'");
 $att_pct = ($total_att > 0) ? round(($present_att / $total_att) * 100) : 0;
 
 // Submissions count
-$total_submissions = mysqli_num_rows(mysqli_query($con, "SELECT * FROM submissions WHERE student_id='$student_id'"));
+$total_submissions = safe_count($con, "submissions", "student_id='$student_id'");
 
 // Average Grade
-$grade_q = mysqli_query($con, "SELECT marks FROM grades WHERE student_id='$student_id'");
+$grade_q = @mysqli_query($con, "SELECT marks FROM grades WHERE student_id='$student_id'");
 $grade_sum = 0;
 $grade_count = 0;
-while ($g = mysqli_fetch_assoc($grade_q)) {
-    $grade_sum += $g['marks'];
+if ($grade_q && mysqli_num_rows($grade_q) > 0) {
+    while ($g = mysqli_fetch_assoc($grade_q)) {
+        $grade_sum += $g['marks'];
+        $grade_count++;
+    }
+}
     $grade_count++;
 }
 $avg_marks = ($grade_count > 0) ? round($grade_sum / $grade_count) : 0;

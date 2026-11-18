@@ -39,9 +39,13 @@ if [ -z "$DB_HOST" ] || [ "$DB_HOST" = "localhost" ] || [ "$DB_HOST" = "127.0.0.
         sleep 1
     done
 
-    # Create and import student_portal database
+    # Create and import database tables
     echo "Verifying student_portal database in MariaDB..."
     mysql --protocol=tcp -h 127.0.0.1 -u root -e "CREATE DATABASE IF NOT EXISTS student_portal DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null || true
+    if [ -f "/var/www/html/database/college_website.sql" ]; then
+        echo "Importing full university schema & tables..."
+        mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/college_website.sql 2>/dev/null || true
+    fi
     mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/student_portal.sql 2>/dev/null || true
     mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/sample_data.sql 2>/dev/null || true
     echo "Database initialization finished successfully!"

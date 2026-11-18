@@ -10,24 +10,24 @@ check_role('admin');
 
 $page_title = "Academic & System Reports";
 
-$total_students = mysqli_num_rows(mysqli_query($con, "SELECT * FROM students"));
-$total_faculty = mysqli_num_rows(mysqli_query($con, "SELECT * FROM faculty"));
-$total_subjects = mysqli_num_rows(mysqli_query($con, "SELECT * FROM subjects"));
-$total_assignments = mysqli_num_rows(mysqli_query($con, "SELECT * FROM assignments"));
-$total_submissions = mysqli_num_rows(mysqli_query($con, "SELECT * FROM submissions"));
-$total_attendance = mysqli_num_rows(mysqli_query($con, "SELECT * FROM attendance"));
-$total_notices = mysqli_num_rows(mysqli_query($con, "SELECT * FROM notices"));
+$total_students = safe_count($con, "students");
+$total_faculty = safe_count($con, "faculty");
+$total_subjects = safe_count($con, "subjects");
+$total_assignments = safe_count($con, "assignments");
+$total_submissions = safe_count($con, "submissions");
+$total_attendance = safe_count($con, "attendance");
+$total_notices = safe_count($con, "notices");
 
 // Student breakdown by course
-$course_stats = mysqli_query($con, "
+$course_stats = @mysqli_query($con, "
     SELECT course, COUNT(*) as count 
     FROM students 
     GROUP BY course
 ");
 
 // Attendance present vs absent
-$present_count = mysqli_num_rows(mysqli_query($con, "SELECT * FROM attendance WHERE status='Present'"));
-$absent_count = mysqli_num_rows(mysqli_query($con, "SELECT * FROM attendance WHERE status='Absent'"));
+$present_count = safe_count($con, "attendance", "status='Present'");
+$absent_count = safe_count($con, "attendance", "status='Absent'");
 $overall_att_pct = ($total_attendance > 0) ? round(($present_count / $total_attendance) * 100, 1) : 0;
 
 include("../includes/header.php");

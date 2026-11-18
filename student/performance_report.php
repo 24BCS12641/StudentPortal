@@ -25,12 +25,12 @@ $student = mysqli_fetch_assoc($st_query);
 $student_id = $student['student_id'] ?? 0;
 
 // Attendance Calculations
-$total_attendance = mysqli_num_rows(mysqli_query($con, "SELECT * FROM attendance WHERE student_id='$student_id'"));
-$present_attendance = mysqli_num_rows(mysqli_query($con, "SELECT * FROM attendance WHERE student_id='$student_id' AND status='Present'"));
+$total_attendance = safe_count($con, "attendance", "student_id='$student_id'");
+$present_attendance = safe_count($con, "attendance", "student_id='$student_id' AND status='Present'");
 $attendance_pct = ($total_attendance > 0) ? round(($present_attendance / $total_attendance) * 100, 1) : 0;
 
 // Submissions
-$total_submissions = mysqli_num_rows(mysqli_query($con, "SELECT * FROM submissions WHERE student_id='$student_id'"));
+$total_submissions = safe_count($con, "submissions", "student_id='$student_id'");
 
 // Grades Breakdown
 $grades_q = mysqli_query($con, "

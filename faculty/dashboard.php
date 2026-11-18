@@ -17,29 +17,23 @@ $f_query = mysqli_query($con, "SELECT * FROM faculty WHERE user_id='$user_id' LI
 $faculty = mysqli_fetch_assoc($f_query);
 $faculty_id = $faculty['faculty_id'] ?? 0;
 
-// Metrics
-$total_assignments = mysqli_num_rows(mysqli_query($con, "
-    SELECT * FROM assignments 
-    WHERE faculty_id='$faculty_id' OR faculty_id IS NULL
-"));
+// Metrics (Safe & Resilient)
+$total_assignments = safe_count($con, "assignments", "faculty_id='$faculty_id' OR faculty_id IS NULL");
 
-$total_submissions = mysqli_num_rows(mysqli_query($con, "
-    SELECT s.* FROM submissions s
+$total_submissions_res = @mysqli_query($con, "
+    SELECT s.submission_id FROM submissions s
     JOIN assignments a ON s.assignment_id = a.assignment_id
     WHERE a.faculty_id='$faculty_id' OR a.faculty_id IS NULL
-"));
+");
+$total_submissions = safe_num_rows($total_submissions_res);
 
-$total_materials = mysqli_num_rows(mysqli_query($con, "
-    SELECT * FROM study_materials 
-    WHERE faculty_id='$faculty_id' OR faculty_id IS NULL
-"));
+$total_materials = safe_count($con, "study_materials", "faculty_id='$faculty_id' OR faculty_id IS NULL");
 
-$total_attendance = mysqli_num_rows(mysqli_query($con, "
-    SELECT DISTINCT attendance_date, subject_id FROM attendance
-"));
+$total_att_res = @mysqli_query($con, "SELECT DISTINCT attendance_date, subject_id FROM attendance");
+$total_attendance = safe_num_rows($total_att_res);
 
 // Recent 5 Submissions needing grading or reviewed
-$recent_submissions = mysqli_query($con, "
+$recent_submissions = @mysqli_query($con, "
     SELECT s.*, u.name AS student_name, st.roll_no, a.title AS assignment_title, sub.`$subj_col` AS subject_name
     FROM submissions s
     JOIN students st ON s.student_id = st.student_id

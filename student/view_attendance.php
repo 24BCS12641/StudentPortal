@@ -29,8 +29,8 @@ $query = mysqli_query($con, "
 ");
 
 // Calculate stats
-$total_classes = mysqli_num_rows(mysqli_query($con, "SELECT * FROM attendance WHERE student_id='$student_id'"));
-$present_classes = mysqli_num_rows(mysqli_query($con, "SELECT * FROM attendance WHERE student_id='$student_id' AND status='Present'"));
+$total_classes = safe_count($con, "attendance", "student_id='$student_id'");
+$present_classes = safe_count($con, "attendance", "student_id='$student_id' AND status='Present'");
 $absent_classes = $total_classes - $present_classes;
 $pct = ($total_classes > 0) ? round(($present_classes / $total_classes) * 100, 1) : 0;
 
