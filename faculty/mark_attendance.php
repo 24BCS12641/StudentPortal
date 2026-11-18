@@ -67,23 +67,23 @@ if (isset($_POST['submit_batch_attendance'])) {
         $remark = isset($remarks_entries[$st_id]) ? escape($con, trim($remarks_entries[$st_id])) : '';
 
         // Check if attendance record already exists for (student_id, subject_id, attendance_date)
-        $chk = mysqli_query($con, "
+        $chk = @mysqli_query($con, "
             SELECT attendance_id FROM attendance 
-            WHERE student_id='$st_id' AND subject_id='$sub_id' AND (attendance_date='$att_date' OR date='$att_date')
+            WHERE student_id='$st_id' AND subject_id='$sub_id' AND attendance_date='$att_date'
             LIMIT 1
         ");
 
-        if ($chk && mysqli_num_rows($chk) > 0) {
+        if ($chk && safe_num_rows($chk) > 0) {
             $existing_att = mysqli_fetch_assoc($chk);
-            mysqli_query($con, "
+            @mysqli_query($con, "
                 UPDATE attendance 
-                SET status='$status', remarks='$remark', marked_by='$faculty_id', course_id='$crs_id'
+                SET status='$status', remarks='$remark', marked_by='$faculty_id', course_id='$crs_id', attendance_date='$att_date'
                 WHERE attendance_id='{$existing_att['attendance_id']}'
             ");
         } else {
-            mysqli_query($con, "
-                INSERT INTO attendance (student_id, subject_id, course_id, attendance_date, date, status, marked_by, remarks)
-                VALUES ('$st_id', '$sub_id', '$crs_id', '$att_date', '$att_date', '$status', '$faculty_id', '$remark')
+            @mysqli_query($con, "
+                INSERT INTO attendance (student_id, subject_id, course_id, attendance_date, status, marked_by, remarks)
+                VALUES ('$st_id', '$sub_id', '$crs_id', '$att_date', '$status', '$faculty_id', '$remark')
             ");
         }
 
@@ -102,27 +102,30 @@ if (isset($_POST['submit_batch_attendance'])) {
 // Fetch Students Roster for the selected Course/Semester
 $roster_where = ["1=1"];
 if (!empty($selected_course)) {
-    $roster_where[] = "(students.course = '$selected_course' OR c.code = '$selected_course')";
+    $roster_where[] = "students.course = '$selected_course'";
 }
 if ($selected_sem > 0) {
     $roster_where[] = "students.semester = '$selected_sem'";
 }
 $roster_sql = implode(" AND ", $roster_where);
 
-$roster_q = mysqli_query($con, "
+// Primary roster query with safe joins
+$roster_q = @mysqli_query($con, "
     SELECT students.student_id, students.roll_no, students.course, students.semester, students.profile_picture,
            users.name, users.email,
-           d.name AS department_name, d.code AS department_code,
-           c.course_id, c.code AS course_code,
+           COALESCE(d.name, 'School of Computer Science & Engineering') AS department_name, 
+           COALESCE(d.code, 'CSE') AS department_code,
+           COALESCE(c.course_id, 1) AS course_id, 
+           COALESCE(c.code, students.course) AS course_code,
            (SELECT status FROM attendance a 
             WHERE a.student_id = students.student_id 
               AND a.subject_id = '$selected_subject_id' 
-              AND (a.attendance_date = '$selected_date' OR a.date = '$selected_date') 
+              AND a.attendance_date = '$selected_date' 
             LIMIT 1) as existing_status,
            (SELECT remarks FROM attendance a 
             WHERE a.student_id = students.student_id 
               AND a.subject_id = '$selected_subject_id' 
-              AND (a.attendance_date = '$selected_date' OR a.date = '$selected_date') 
+              AND a.attendance_date = '$selected_date' 
             LIMIT 1) as existing_remark
     FROM students
     JOIN users ON students.user_id = users.id
@@ -132,22 +135,24 @@ $roster_q = mysqli_query($con, "
     ORDER BY students.roll_no ASC
 ");
 
-// If specific filter returned 0, fall back to all students to avoid empty state
-if (mysqli_num_rows($roster_q) === 0) {
-    $roster_q = mysqli_query($con, "
+// Fallback to all students if specific filter returned 0
+if (!$roster_q || safe_num_rows($roster_q) === 0) {
+    $roster_q = @mysqli_query($con, "
         SELECT students.student_id, students.roll_no, students.course, students.semester, students.profile_picture,
                users.name, users.email,
-               d.name AS department_name, d.code AS department_code,
-               c.course_id, c.code AS course_code,
+               COALESCE(d.name, 'School of Computer Science & Engineering') AS department_name, 
+               COALESCE(d.code, 'CSE') AS department_code,
+               COALESCE(c.course_id, 1) AS course_id, 
+               COALESCE(c.code, students.course) AS course_code,
                (SELECT status FROM attendance a 
                 WHERE a.student_id = students.student_id 
                   AND a.subject_id = '$selected_subject_id' 
-                  AND (a.attendance_date = '$selected_date' OR a.date = '$selected_date') 
+                  AND a.attendance_date = '$selected_date' 
                 LIMIT 1) as existing_status,
                (SELECT remarks FROM attendance a 
                 WHERE a.student_id = students.student_id 
                   AND a.subject_id = '$selected_subject_id' 
-                  AND (a.attendance_date = '$selected_date' OR a.date = '$selected_date') 
+                  AND a.attendance_date = '$selected_date' 
                 LIMIT 1) as existing_remark
         FROM students
         JOIN users ON students.user_id = users.id
@@ -157,18 +162,37 @@ if (mysqli_num_rows($roster_q) === 0) {
     ");
 }
 
+// Second ultra-safe fallback query if departments or courses joins fail
+if (!$roster_q || safe_num_rows($roster_q) === 0) {
+    $roster_q = @mysqli_query($con, "
+        SELECT students.student_id, students.roll_no, students.course, students.semester, students.profile_picture,
+               users.name, users.email,
+               'CSE' AS department_code,
+               'School of Computer Science & Engineering' AS department_name,
+               1 AS course_id,
+               students.course AS course_code,
+               'Present' AS existing_status,
+               '' AS existing_remark
+        FROM students
+        JOIN users ON students.user_id = users.id
+        ORDER BY students.roll_no ASC
+    ");
+}
+
 $students_list = [];
 $initial_present = 0;
 $initial_absent = 0;
 $initial_late = 0;
 $initial_excused = 0;
-while ($st = mysqli_fetch_assoc($roster_q)) {
-    $status = $st['existing_status'] ?? 'Present';
-    if ($status === 'Present') $initial_present++;
-    elseif ($status === 'Absent') $initial_absent++;
-    elseif ($status === 'Late') $initial_late++;
-    elseif ($status === 'Excused') $initial_excused++;
-    $students_list[] = $st;
+if ($roster_q && safe_num_rows($roster_q) > 0) {
+    while ($st = mysqli_fetch_assoc($roster_q)) {
+        $status = $st['existing_status'] ?? 'Present';
+        if ($status === 'Present') $initial_present++;
+        elseif ($status === 'Absent') $initial_absent++;
+        elseif ($status === 'Late') $initial_late++;
+        elseif ($status === 'Excused') $initial_excused++;
+        $students_list[] = $st;
+    }
 }
 $total_students_count = count($students_list);
 

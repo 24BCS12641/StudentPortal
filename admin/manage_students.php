@@ -162,7 +162,7 @@ include("../includes/navbar.php");
                 }
                 ?>
             </h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($query); ?> Students</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($query); ?> Students</span>
         </div>
 
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">

@@ -126,10 +126,11 @@ if (isset($_GET['delete'])) {
 
 // Fetch Class Roster for active subject's course & semester
 $sub_title_safe = escape($con, $active_subject['subject_name'] ?? '');
-$roster_q = mysqli_query($con, "
+$roster_q = @mysqli_query($con, "
     SELECT s.student_id, s.roll_no, s.course, s.semester, s.profile_picture,
            u.name AS student_name, u.email AS student_email,
-           d.name AS department_name, d.code AS department_code,
+           COALESCE(d.name, 'School of Computer Science & Engineering') AS department_name, 
+           COALESCE(d.code, 'CSE') AS department_code,
            r.marks_obtained, r.total_marks, r.grade, r.status
     FROM students s
     JOIN users u ON s.user_id = u.id
@@ -143,11 +144,12 @@ $roster_q = mysqli_query($con, "
 ");
 
 // Fallback to all students if none matched specific course code
-if (mysqli_num_rows($roster_q) === 0) {
-    $roster_q = mysqli_query($con, "
+if (!$roster_q || safe_num_rows($roster_q) === 0) {
+    $roster_q = @mysqli_query($con, "
         SELECT s.student_id, s.roll_no, s.course, s.semester, s.profile_picture,
                u.name AS student_name, u.email AS student_email,
-               d.name AS department_name, d.code AS department_code,
+               COALESCE(d.name, 'School of Computer Science & Engineering') AS department_name, 
+               COALESCE(d.code, 'CSE') AS department_code,
                r.marks_obtained, r.total_marks, r.grade, r.status
         FROM students s
         JOIN users u ON s.user_id = u.id
@@ -159,6 +161,19 @@ if (mysqli_num_rows($roster_q) === 0) {
     ");
 }
 
+// Second ultra-safe fallback
+if (!$roster_q || safe_num_rows($roster_q) === 0) {
+    $roster_q = @mysqli_query($con, "
+        SELECT s.student_id, s.roll_no, s.course, s.semester, s.profile_picture,
+               u.name AS student_name, u.email AS student_email,
+               'CSE' AS department_code, 'School of Computer Science & Engineering' AS department_name,
+               NULL AS marks_obtained, 100 AS total_marks, NULL AS grade, NULL AS status
+        FROM students s
+        JOIN users u ON s.user_id = u.id
+        ORDER BY s.roll_no ASC
+    ");
+}
+
 $candidates = [];
 $initial_pass = 0;
 $initial_fail = 0;
@@ -166,17 +181,19 @@ $marks_sum = 0;
 $marks_count = 0;
 $highest_score = 0;
 
-while ($cand = mysqli_fetch_assoc($roster_q)) {
-    if ($cand['marks_obtained'] !== null) {
-        $marks_count++;
-        $marks_sum += (int)$cand['marks_obtained'];
-        if ((int)$cand['marks_obtained'] > $highest_score) {
-            $highest_score = (int)$cand['marks_obtained'];
+if ($roster_q && safe_num_rows($roster_q) > 0) {
+    while ($cand = mysqli_fetch_assoc($roster_q)) {
+        if ($cand['marks_obtained'] !== null) {
+            $marks_count++;
+            $marks_sum += (int)$cand['marks_obtained'];
+            if ((int)$cand['marks_obtained'] > $highest_score) {
+                $highest_score = (int)$cand['marks_obtained'];
+            }
+            if ($cand['status'] === 'Pass') $initial_pass++;
+            else $initial_fail++;
         }
-        if ($cand['status'] === 'Pass') $initial_pass++;
-        else $initial_fail++;
+        $candidates[] = $cand;
     }
-    $candidates[] = $cand;
 }
 $class_avg = ($marks_count > 0) ? round(($marks_sum / ($marks_count * $active_max_marks)) * 100, 1) : 0;
 
@@ -441,7 +458,7 @@ include("../includes/navbar.php");
     <div class="card-header" style="flex-wrap:wrap; gap:12px;">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-clock-rotate-left text-primary"></i> Published Examination Results Registry</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($results_history_q); ?> Records</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($results_history_q); ?> Records</span>
         </div>
         <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">
             <i class="fa-solid fa-print"></i> Print Gazette

@@ -69,6 +69,102 @@ if (!$con) {
 
 mysqli_set_charset($con, "utf8mb4");
 
+// Auto Self-Healing University Schema Verification
+if ($con) {
+    static $schema_checked = false;
+    if (!$schema_checked) {
+        $schema_checked = true;
+        @mysqli_query($con, "ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `department_id` INT DEFAULT 1");
+        @mysqli_query($con, "ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `course_id` INT DEFAULT 1");
+        @mysqli_query($con, "ALTER TABLE `attendance` ADD COLUMN IF NOT EXISTS `attendance_date` DATE DEFAULT NULL");
+        @mysqli_query($con, "ALTER TABLE `attendance` ADD COLUMN IF NOT EXISTS `date` DATE DEFAULT NULL");
+        @mysqli_query($con, "ALTER TABLE `attendance` ADD COLUMN IF NOT EXISTS `marked_by` INT DEFAULT NULL");
+        @mysqli_query($con, "ALTER TABLE `attendance` ADD COLUMN IF NOT EXISTS `remarks` VARCHAR(255) DEFAULT NULL");
+        @mysqli_query($con, "ALTER TABLE `attendance` ADD COLUMN IF NOT EXISTS `course_id` INT DEFAULT 1");
+        @mysqli_query($con, "ALTER TABLE `attendance` MODIFY COLUMN `status` ENUM('Present', 'Absent', 'Late', 'Excused') NOT NULL DEFAULT 'Present'");
+        
+        // Ensure results table exists
+        @mysqli_query($con, "
+            CREATE TABLE IF NOT EXISTS `results` (
+                `result_id` int(11) NOT NULL AUTO_INCREMENT,
+                `student_id` int(11) NOT NULL,
+                `course_id` int(11) DEFAULT 1,
+                `semester` int(11) NOT NULL DEFAULT 1,
+                `subject_name` varchar(150) NOT NULL,
+                `exam_type` varchar(50) DEFAULT 'End Semester Examination',
+                `total_marks` int(11) NOT NULL DEFAULT 100,
+                `marks_obtained` int(11) NOT NULL DEFAULT 0,
+                `grade` varchar(10) NOT NULL DEFAULT 'A',
+                `status` enum('Pass','Fail') DEFAULT 'Pass',
+                `published_at` timestamp NOT NULL DEFAULT current_timestamp(),
+                PRIMARY KEY (`result_id`),
+                KEY `student_id` (`student_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+
+        // Ensure departments table exists
+        @mysqli_query($con, "
+            CREATE TABLE IF NOT EXISTS `departments` (
+                `department_id` int(11) NOT NULL AUTO_INCREMENT,
+                `name` varchar(150) NOT NULL,
+                `code` varchar(20) NOT NULL,
+                `description` text DEFAULT NULL,
+                `head_of_dept` varchar(120) DEFAULT NULL,
+                `icon` varchar(50) DEFAULT 'fa-laptop-code',
+                `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+                PRIMARY KEY (`department_id`),
+                UNIQUE KEY `code` (`code`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+
+        // Ensure courses table exists
+        @mysqli_query($con, "
+            CREATE TABLE IF NOT EXISTS `courses` (
+                `course_id` int(11) NOT NULL AUTO_INCREMENT,
+                `department_id` int(11) NOT NULL DEFAULT 1,
+                `name` varchar(150) NOT NULL,
+                `code` varchar(30) NOT NULL,
+                `degree_level` enum('Undergraduate','Postgraduate','Doctorate','Diploma') NOT NULL DEFAULT 'Undergraduate',
+                `duration` varchar(50) NOT NULL DEFAULT '3 Years',
+                `semester_count` int(11) NOT NULL DEFAULT 6,
+                `fees_per_year` decimal(10,2) NOT NULL DEFAULT 65000.00,
+                `eligibility` text DEFAULT NULL,
+                `description` text DEFAULT NULL,
+                `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+                PRIMARY KEY (`course_id`),
+                UNIQUE KEY `code` (`code`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+
+        // Seed default departments if empty
+        $check_d = @mysqli_query($con, "SELECT COUNT(*) FROM `departments`");
+        if ($check_d && ($row_d = mysqli_fetch_row($check_d)) && (int)$row_d[0] === 0) {
+            @mysqli_query($con, "
+                INSERT INTO `departments` (`department_id`, `name`, `code`, `icon`) VALUES
+                (1, 'School of Computer Science & Engineering', 'CSE', 'fa-laptop-code'),
+                (2, 'Department of Business Administration & Management', 'BBA', 'fa-briefcase'),
+                (3, 'School of Information Technology & Data Science', 'IT', 'fa-database'),
+                (4, 'Department of Mechanical & Robotics Engineering', 'MECH', 'fa-gears'),
+                (5, 'Department of Humanities, Arts & Journalism', 'HAJ', 'fa-feather-pointed')
+            ");
+        }
+
+        // Seed default courses if empty
+        $check_c = @mysqli_query($con, "SELECT COUNT(*) FROM `courses`");
+        if ($check_c && ($row_c = mysqli_fetch_row($check_c)) && (int)$row_c[0] === 0) {
+            @mysqli_query($con, "
+                INSERT INTO `courses` (`course_id`, `department_id`, `name`, `code`, `degree_level`, `duration`, `semester_count`) VALUES
+                (1, 1, 'Bachelor of Technology in Computer Science & Engineering', 'BTECH-CSE', 'Undergraduate', '4 Years', 8),
+                (2, 1, 'Bachelor of Computer Applications', 'BCA', 'Undergraduate', '3 Years', 6),
+                (3, 2, 'Bachelor of Business Administration', 'BBA', 'Undergraduate', '3 Years', 6),
+                (4, 2, 'Master of Business Administration', 'MBA', 'Postgraduate', '2 Years', 4),
+                (5, 3, 'Master of Computer Applications', 'MCA', 'Postgraduate', '2 Years', 4),
+                (6, 4, 'B.Tech in Mechanical Engineering & Automation', 'BTECH-MECH', 'Undergraduate', '4 Years', 8)
+            ");
+        }
+    }
+}
+
 // Global Safe Counter Helper (Immune to false results and missing tables)
 if (!function_exists('safe_count')) {
     function safe_count($con, $table, $where = "1=1") {

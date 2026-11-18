@@ -45,8 +45,9 @@ if [ -z "$DB_HOST" ] || [ "$DB_HOST" = "localhost" ] || [ "$DB_HOST" = "127.0.0.
     if [ -f "/var/www/html/database/college_website.sql" ]; then
         echo "Importing full university schema & tables..."
         mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/college_website.sql 2>/dev/null || true
+    else
+        mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/student_portal.sql 2>/dev/null || true
     fi
-    mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/student_portal.sql 2>/dev/null || true
     mysql --protocol=tcp -h 127.0.0.1 -u root student_portal < /var/www/html/database/sample_data.sql 2>/dev/null || true
     
     # Ensure modern columns exist across environments

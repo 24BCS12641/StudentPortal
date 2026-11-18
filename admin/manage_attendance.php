@@ -67,7 +67,7 @@ include("../includes/navbar.php");
     <div class="card-header" style="flex-wrap:wrap; gap:12px;">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-calendar-check text-primary"></i> University Student Attendance Register</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($query); ?> Logs Filtered</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($query); ?> Logs Filtered</span>
         </div>
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
             <form method="GET" class="search-toolbar" style="display:flex; gap:8px; flex-wrap:wrap;">

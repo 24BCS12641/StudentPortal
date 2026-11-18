@@ -168,7 +168,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-certificate"></i> Official Semester Examination Results</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($results_query); ?> Records</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($results_query); ?> Records</span>
         </div>
 
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">

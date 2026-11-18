@@ -49,7 +49,7 @@ $query = mysqli_query($con, "
     ORDER BY a.attendance_date DESC, a.attendance_id DESC
 ");
 
-$total_records = mysqli_num_rows($query);
+$total_records = safe_num_rows($query);
 
 // Analytics
 $stat_p = safe_count($con, "attendance", "status='Present'");
