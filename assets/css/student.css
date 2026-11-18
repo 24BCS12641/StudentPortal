@@ -1,0 +1,7 @@
+@import url('dashboard.css');
+
+/* Student specific accent customizations */
+:root {
+    --primary: #2563eb;
+    --primary-gradient: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+}

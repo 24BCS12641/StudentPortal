@@ -1,0 +1,78 @@
+<?php
+/**
+ * Add Campus Notice (Admin)
+ * EduPortal Management System
+ */
+
+include("../config/auth.php");
+include("../config/db.php");
+check_role('admin');
+
+$page_title = "Post Campus Notice";
+$error = "";
+
+if (isset($_POST['post_notice'])) {
+    $title = escape($con, $_POST['title']);
+    $description = escape($con, $_POST['description']);
+    $posted_by = escape($con, $_SESSION['name'] ?? 'Administrator');
+
+    if (empty($title) || empty($description)) {
+        $error = "Notice title and description are required.";
+    } else {
+        $insert = mysqli_query($con, "
+            INSERT INTO notices (title, description, posted_by)
+            VALUES ('$title', '$description', '$posted_by')
+        ");
+
+        if ($insert) {
+            set_flash("success", "Notice '$title' published successfully!");
+            header("Location: manage_notices.php");
+            exit();
+        } else {
+            $error = "Database Error: " . mysqli_error($con);
+        }
+    }
+}
+
+include("../includes/header.php");
+include("../includes/sidebar_admin.php");
+include("../includes/navbar.php");
+?>
+
+<div class="card" style="max-width: 750px; margin: 0 auto;">
+    <div class="card-header">
+        <h3><i class="fa-solid fa-bullhorn"></i> Publish Campus Announcement</h3>
+        <a href="manage_notices.php" class="btn btn-outline btn-sm">
+            <i class="fa-solid fa-arrow-left"></i> Back to Notices
+        </a>
+    </div>
+    <div class="card-body">
+        <?php if (!empty($error)): ?>
+            <div class="alert alert-danger">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <div><?php echo htmlspecialchars($error); ?></div>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label">Notice Headline / Title <span class="required">*</span></label>
+                <input type="text" name="title" class="form-control" placeholder="e.g. Mid-Semester Theory Exam Datesheet Released" required value="<?php echo isset($_POST['title']) ? htmlspecialchars($_POST['title']) : ''; ?>">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Notice Details & Description <span class="required">*</span></label>
+                <textarea name="description" class="form-control" rows="7" placeholder="Write full details, guidelines, venue, dates, instructions..." required><?php echo isset($_POST['description']) ? htmlspecialchars($_POST['description']) : ''; ?></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:25px;">
+                <a href="manage_notices.php" class="btn btn-secondary">Cancel</a>
+                <button type="submit" name="post_notice" class="btn btn-primary">
+                    <i class="fa-solid fa-paper-plane"></i> Publish Notice
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php include("../includes/footer.php"); ?>

@@ -1,0 +1,1003 @@
+/**
+ * Public Website Stylesheet
+ * Apex Imperial University - Modern International University Design
+ * Palette: Navy Blue (#0a192f), White (#ffffff), Royal Gold (#d4af37)
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --navy-dark: #071326;
+    --navy-primary: #0a192f;
+    --navy-surface: #112240;
+    --navy-light: #1b2a4a;
+    
+    --gold: #d4af37;
+    --gold-hover: #b8860b;
+    --gold-light: #fef9c3;
+    --gold-gradient: linear-gradient(135deg, #e5a93c 0%, #d4af37 50%, #b8860b 100%);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    
+    --bg-light: #f8fafc;
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
+    
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
+    
+    --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --shadow-card: 0 10px 25px -5px rgba(10, 25, 47, 0.08), 0 8px 10px -6px rgba(10, 25, 47, 0.04);
+    --shadow-hover: 0 20px 35px -5px rgba(10, 25, 47, 0.15), 0 10px 15px -5px rgba(10, 25, 47, 0.08);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-light);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
+}
+
+a {
+    color: var(--navy-primary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--gold);
+}
+
+.text-gold {
+    color: var(--gold) !important;
+}
+
+.bg-gold {
+    background-color: var(--gold) !important;
+}
+
+.bg-navy {
+    background-color: var(--navy-primary) !important;
+}
+
+.bg-navy-dark {
+    background-color: var(--navy-dark) !important;
+}
+
+.bg-navy-light {
+    background-color: var(--navy-light) !important;
+}
+
+.text-light-muted {
+    color: #94a3b8 !important;
+}
+
+.fs-7 {
+    font-size: 0.85rem !important;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn-gold {
+    background: var(--gold-gradient);
+    color: #071326 !important;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 12px 26px;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+}
+
+.btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+    color: #000000 !important;
+}
+
+.btn-outline-gold {
+    border: 2px solid var(--gold);
+    color: var(--gold) !important;
+    background: transparent;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    padding: 11px 24px;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-outline-gold:hover {
+    background: var(--gold);
+    color: #071326 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+}
+
+.btn-navy {
+    background: var(--navy-primary);
+    color: #ffffff !important;
+    font-weight: 700;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 12px 26px;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-navy:hover {
+    background: var(--navy-surface);
+    border-color: var(--gold);
+    color: var(--gold) !important;
+    transform: translateY(-3px);
+}
+
+/* ==========================================================================
+   Header & Navigation
+   ========================================================================== */
+.top-info-bar {
+    background-color: var(--navy-dark);
+    color: #e2e8f0;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.top-info-bar a {
+    color: #cbd5e1;
+}
+
+.top-info-bar a:hover {
+    color: var(--gold);
+}
+
+.info-badge {
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    color: #fef08a;
+    font-weight: 600;
+}
+
+.top-portal-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+    padding: 3px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: var(--transition);
+}
+
+.top-portal-btn:hover {
+    background: var(--gold);
+    color: #071326 !important;
+    border-color: var(--gold);
+}
+
+.main-university-nav {
+    background: rgba(10, 25, 47, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 2px solid var(--gold);
+    padding: 12px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    transition: var(--transition);
+}
+
+.university-crest {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--gold-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #071326;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    flex-shrink: 0;
+}
+
+.brand-titles .university-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+}
+
+.brand-titles .university-tagline {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 1.2px;
+    margin-top: 3px;
+}
+
+.main-university-nav .nav-link {
+    color: #e2e8f0;
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 8px 14px !important;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.main-university-nav .nav-link:hover,
+.main-university-nav .nav-link.active {
+    color: var(--gold) !important;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero-section {
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(7, 19, 38, 0.92) 0%, rgba(10, 25, 47, 0.88) 100%),
+                url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+    color: #ffffff;
+    padding: 80px 0;
+}
+
+.hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(212, 175, 55, 0.18);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: var(--radius-full);
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.hero-title span {
+    color: var(--gold);
+    font-style: italic;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #cbd5e1;
+    max-width: 650px;
+    margin-bottom: 35px;
+    line-height: 1.7;
+}
+
+/* Hero Key Stats Strip */
+.hero-stats-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 30px;
+    margin-top: 40px;
+}
+
+.hero-stat-item h3 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 2px;
+}
+
+.hero-stat-item p {
+    font-size: 13px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ==========================================================================
+   Section Headers
+   ========================================================================== */
+.section-tag {
+    display: inline-block;
+    padding: 4px 14px;
+    background: rgba(212, 175, 55, 0.15);
+    color: #b8860b;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.section-title {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--navy-primary);
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+.section-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   Cards & Content Blocks
+   ========================================================================== */
+.univ-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+    height: 100%;
+    overflow: hidden;
+}
+
+.univ-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+    border-color: #cbd5e1;
+}
+
+.course-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.dept-icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 25, 47, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--navy-primary);
+    margin-bottom: 20px;
+    transition: var(--transition);
+}
+
+.univ-card:hover .dept-icon-box {
+    background: var(--gold-gradient);
+    color: #071326;
+    transform: rotate(6deg) scale(1.05);
+}
+
+/* Notice Ticker */
+.notice-ticker-bar {
+    background: var(--navy-primary);
+    color: #ffffff;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.ticker-badge {
+    background: var(--gold);
+    color: #071326;
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.8px;
+}
+
+/* Event Card */
+.event-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    display: flex;
+    gap: 20px;
+    transition: var(--transition);
+    box-shadow: var(--shadow-card);
+}
+
+.event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--gold);
+}
+
+.event-date-box {
+    width: 70px;
+    height: 75px;
+    background: var(--navy-primary);
+    color: #ffffff;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-top: 4px solid var(--gold);
+}
+
+.event-date-box .event-day {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.event-date-box .event-month {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--gold);
+    margin-top: 2px;
+}
+
+/* Facility Card */
+.facility-card {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    height: 280px;
+    box-shadow: var(--shadow-card);
+}
+
+.facility-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.facility-card:hover img {
+    transform: scale(1.08);
+}
+
+.facility-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(7, 19, 38, 0.1) 0%, rgba(7, 19, 38, 0.95) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    color: #ffffff;
+}
+
+.facility-overlay h5 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+/* Placement Stats Strip */
+.placement-banner {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-primary) 100%);
+    border-radius: var(--radius-lg);
+    padding: 50px 40px;
+    color: #ffffff;
+    box-shadow: 0 15px 35px -5px rgba(10, 25, 47, 0.35);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+/* Footer Styles */
+.university-footer {
+    background: var(--navy-dark);
+    color: #e2e8f0;
+    border-top: 4px solid var(--gold);
+}
+
+.university-crest-footer {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--gold-gradient);
+    color: #071326;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.footer-heading {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.footer-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 35px;
+    height: 2px;
+    background: var(--gold);
+}
+
+.footer-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links-list li {
+    margin-bottom: 10px;
+}
+
+.footer-links-list li a {
+    color: #94a3b8;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.footer-links-list li a i {
+    font-size: 10px;
+    color: var(--gold);
+    transition: var(--transition);
+}
+
+.footer-links-list li a:hover {
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
+.social-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: var(--transition);
+}
+
+.social-circle:hover {
+    background: var(--gold);
+    color: #071326;
+    transform: translateY(-3px);
+}
+
+/* ==========================================================================
+   Responsive Utilities
+   ========================================================================== */
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 2.6rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 2.1rem;
+    }
+    
+    .event-card {
+        flex-direction: column;
+    }
+    
+    .hero-stats-row {
+        gap: 20px;
+    }
+}
+
+/* ==========================================================================
+   Advanced Pro Developer Additions (Impressive UI/UX Enhancements)
+   ========================================================================== */
+
+/* 1. Navbar Glassmorphism on Scroll */
+.main-university-nav.scrolled {
+    background: rgba(7, 19, 38, 0.98) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    padding: 8px 0;
+}
+
+/* 2. Search Modal Button */
+.search-modal-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+    transition: var(--transition);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.search-modal-btn:hover {
+    background: var(--gold);
+    color: #071326;
+    border-color: var(--gold);
+    transform: translateY(-2px);
+}
+
+/* 3. Student Testimonials Cards */
+.testimonial-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial-card::before {
+    content: "\f10d";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 42px;
+    color: rgba(212, 175, 55, 0.12);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -10px rgba(10, 25, 47, 0.15);
+    border-color: #cbd5e1;
+}
+
+.testimonial-quote {
+    color: var(--text-secondary);
+    font-size: 14.5px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.testimonial-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+}
+
+.rating-stars {
+    color: #f59e0b;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+/* 4. Merit Scholarship Estimator */
+.scholarship-widget {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid rgba(212, 175, 55, 0.35);
+    border-radius: var(--radius-lg);
+    padding: 35px;
+    box-shadow: 0 15px 35px rgba(10, 25, 47, 0.08);
+}
+
+.custom-range-slider {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: #e2e8f0;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 20px 0 10px 0;
+}
+
+.custom-range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--gold-gradient);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+    border: 2px solid #ffffff;
+}
+
+.scholarship-result-box {
+    background: #0a192f;
+    color: #ffffff;
+    border-radius: var(--radius-md);
+    padding: 24px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+/* 5. Virtual Campus Tour Modal */
+.tour-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(7, 19, 38, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 10500;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.tour-modal-content {
+    background: #0a192f;
+    color: #ffffff;
+    border-radius: 20px;
+    max-width: 850px;
+    width: 100%;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPopIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* 6. Quick Search & Command Palette Modal */
+.search-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(7, 19, 38, 0.8);
+    backdrop-filter: blur(6px);
+    z-index: 10600;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 20px 20px 20px;
+}
+
+.search-modal-content {
+    background: #ffffff;
+    border-radius: 18px;
+    max-width: 650px;
+    width: 100%;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    animation: modalPopIn 0.25s ease;
+}
+
+.search-input-header {
+    display: flex;
+    align-items: center;
+    padding: 18px 22px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+    gap: 12px;
+}
+
+.search-input-header input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    color: #0f172a;
+}
+
+.search-results-list {
+    max-height: 380px;
+    overflow-y: auto;
+    padding: 12px;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #1e293b;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.search-result-item:hover {
+    background: #f1f5f9;
+    color: #0a192f;
+    transform: translateX(4px);
+}
+
+/* 7. Floating Back to Top Button */
+.back-to-top-btn {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #0a192f;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    z-index: 9998;
+    transition: var(--transition);
+}
+
+.back-to-top-btn:hover {
+    background: var(--gold);
+    color: #071326;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+}
+
+/* 8. Virtual Admissions Assistant / FAQ Bot */
+.helpbot-toggle {
+    position: fixed;
+    bottom: 84px;
+    right: 24px;
+    z-index: 9998;
+    background: var(--gold-gradient);
+    color: #071326;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+    border: 2px solid #ffffff;
+    transition: var(--transition);
+}
+
+.helpbot-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(212, 175, 55, 0.6);
+}
+
+.helpbot-dialog {
+    display: none;
+    position: fixed;
+    bottom: 140px;
+    right: 24px;
+    width: 320px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    z-index: 9999;
+    animation: popSlideUp 0.25s ease;
+}
+
+.helpbot-header {
+    background: #0a192f;
+    color: #ffffff;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.helpbot-body {
+    padding: 16px;
+    max-height: 320px;
+    overflow-y: auto;
+    font-size: 13px;
+}
+
+.helpbot-chip {
+    display: block;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 6px 14px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #1e293b;
+    cursor: pointer;
+    text-align: left;
+    transition: var(--transition);
+}
+
+.helpbot-chip:hover {
+    background: #0a192f;
+    color: var(--gold);
+    border-color: #0a192f;
+}
+
+.chat-bubble {
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.chat-bubble.bot {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+}
+
+.chat-bubble.user {
+    background: #0a192f;
+    color: #ffffff;
+    margin-left: 20px;
+}

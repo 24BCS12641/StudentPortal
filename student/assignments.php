@@ -1,0 +1,1 @@
+<?php include("view_assignments.php"); ?>

@@ -1,0 +1,7 @@
+@import url('dashboard.css');
+
+/* Admin specific accent customizations */
+:root {
+    --primary: #4f46e5;
+    --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+}
