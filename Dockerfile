@@ -1,7 +1,9 @@
 FROM php:8.2-apache
 
-# Install system dependencies & PHP extensions (mysqli, pdo_mysql, mongodb)
+# Install MariaDB server, client, system tools, and PHP extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    mariadb-server \
+    mariadb-client \
     libssl-dev \
     pkg-config \
     unzip \
@@ -17,7 +19,7 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . /var/www/html/
 
-# Configure permissions for upload folders
+# Configure permissions for upload folders and MariaDB
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && mkdir -p /var/www/html/uploads/assignments \
