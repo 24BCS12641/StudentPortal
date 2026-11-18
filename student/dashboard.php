@@ -47,8 +47,6 @@ if ($grade_q && mysqli_num_rows($grade_q) > 0) {
         $grade_count++;
     }
 }
-    $grade_count++;
-}
 $avg_marks = ($grade_count > 0) ? round($grade_sum / $grade_count) : 0;
 
 // Recent 4 Assignments

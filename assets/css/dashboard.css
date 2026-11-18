@@ -122,6 +122,21 @@ body, button, input, select, textarea {
     -webkit-font-smoothing: antialiased;
 }
 
+.fa::before, .fas::before, .fa-solid::before,
+.far::before, .fa-regular::before,
+.fab::before, .fa-brands::before {
+    font-style: normal !important;
+}
+
+/* Seamless Font Awesome SVG Auto-Upgrade */
+svg.svg-inline--fa {
+    display: inline-block;
+    height: 1.1em;
+    width: auto;
+    overflow: visible;
+    vertical-align: -0.15em;
+}
+
 body {
     background-color: var(--bg-body);
     /* Subtle dot mesh background for sleek Silicon-Valley look */

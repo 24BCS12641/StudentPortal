@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install -j$(nproc) mysqli pdo pdo_mysql \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb \
-    && a2enmod rewrite \
+    && a2enmod rewrite headers \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
