@@ -15,7 +15,7 @@ $subj_col = get_subject_col($con);
 
 // Get faculty ID
 $f_res = mysqli_query($con, "SELECT faculty_id, department FROM faculty WHERE user_id='$user_id' LIMIT 1");
-$faculty = mysqli_fetch_assoc($f_res);
+$faculty = ($f_res && mysqli_num_rows($f_res) > 0) ? mysqli_fetch_assoc($f_res) : [];
 $faculty_id = $faculty['faculty_id'] ?? 0;
 
 // Fetch faculty courses & subjects

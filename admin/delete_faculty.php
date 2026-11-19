@@ -13,7 +13,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
     $find = mysqli_query($con, "SELECT user_id FROM faculty WHERE faculty_id='$faculty_id' LIMIT 1");
     if ($find && mysqli_num_rows($find) > 0) {
-        $faculty = mysqli_fetch_assoc($find);
+        $faculty = ($find && mysqli_num_rows($find) > 0) ? mysqli_fetch_assoc($find) : [];
         $user_id = $faculty['user_id'];
 
         // Detach subjects

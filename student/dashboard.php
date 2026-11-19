@@ -12,8 +12,8 @@ $page_title = "Student Dashboard";
 $user_id = $_SESSION['user_id'];
 $subj_col = get_subject_col($con);
 
-// Get student details
-$st_query = mysqli_query($con, "
+// Get student details (resilient: try JOIN first, fallback to users-only)
+$st_query = @mysqli_query($con, "
     SELECT s.*, u.name, u.email 
     FROM students s
     JOIN users u ON s.user_id = u.id
@@ -21,8 +21,13 @@ $st_query = mysqli_query($con, "
     LIMIT 1
 ");
 
-$student = mysqli_fetch_assoc($st_query);
-$student_id = $student['student_id'] ?? 0;
+if (!$st_query || mysqli_num_rows($st_query) === 0) {
+    // Fallback: get user info directly
+    $st_query = @mysqli_query($con, "SELECT id, name, email, role FROM users WHERE id='$user_id' LIMIT 1");
+}
+
+$student = ($st_query && mysqli_num_rows($st_query) > 0) ? mysqli_fetch_assoc($st_query) : [];
+$student_id = $student['student_id'] ?? $student['id'] ?? 0;
 
 // Metrics (Safe & Resilient)
 $total_subjects = safe_count($con, "subjects");

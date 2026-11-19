@@ -14,7 +14,7 @@ $subj_col = get_subject_col($con);
 
 // Get faculty ID
 $f_query = mysqli_query($con, "SELECT faculty_id FROM faculty WHERE user_id='$user_id' LIMIT 1");
-$faculty = mysqli_fetch_assoc($f_query);
+$faculty = ($f_query && mysqli_num_rows($f_query) > 0) ? mysqli_fetch_assoc($f_query) : [];
 $faculty_id = $faculty['faculty_id'] ?? 0;
 
 $where_clauses = ["(a.faculty_id='$faculty_id' OR a.faculty_id IS NULL)"];

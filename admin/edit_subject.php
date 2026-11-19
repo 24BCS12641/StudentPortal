@@ -32,7 +32,7 @@ if (!$query || mysqli_num_rows($query) === 0) {
     exit();
 }
 
-$row = mysqli_fetch_assoc($query);
+$row = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
 
 // Faculty list
 $faculty_list = mysqli_query($con, "

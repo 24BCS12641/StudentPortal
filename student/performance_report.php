@@ -21,7 +21,7 @@ $st_query = mysqli_query($con, "
     LIMIT 1
 ");
 
-$student = mysqli_fetch_assoc($st_query);
+$student = ($st_query && mysqli_num_rows($st_query) > 0) ? mysqli_fetch_assoc($st_query) : [];
 $student_id = $student['student_id'] ?? 0;
 
 // Attendance Calculations

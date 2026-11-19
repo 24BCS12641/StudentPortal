@@ -13,7 +13,7 @@ $user_id = $_SESSION['user_id'];
 $error = "";
 
 $query = mysqli_query($con, "SELECT * FROM users WHERE id='$user_id' LIMIT 1");
-$user = mysqli_fetch_assoc($query);
+$user = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
 
 // Handle Profile Update
 if (isset($_POST['update_profile'])) {

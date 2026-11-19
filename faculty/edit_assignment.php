@@ -27,7 +27,7 @@ if (!$query || mysqli_num_rows($query) === 0) {
     exit();
 }
 
-$row = mysqli_fetch_assoc($query);
+$row = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
 
 // Subjects
 $subjects = mysqli_query($con, "SELECT subject_id, `$subj_col` AS subject_name, subject_code FROM subjects ORDER BY `$subj_col` ASC");

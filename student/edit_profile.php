@@ -20,7 +20,7 @@ $query = mysqli_query($con, "
     LIMIT 1
 ");
 
-$student = mysqli_fetch_assoc($query);
+$student = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
 
 if (isset($_POST['update_profile'])) {
     $name = escape($con, $_POST['name']);

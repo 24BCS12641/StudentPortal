@@ -13,7 +13,7 @@ $user_id = $_SESSION['user_id'];
 $error = "";
 
 $query = mysqli_query($con, "SELECT password FROM users WHERE id='$user_id' LIMIT 1");
-$user = mysqli_fetch_assoc($query);
+$user = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
 
 if (isset($_POST['change_password'])) {
     $current_password = $_POST['current_password'];

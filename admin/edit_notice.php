@@ -25,7 +25,7 @@ if (!$query || mysqli_num_rows($query) === 0) {
     exit();
 }
 
-$row = mysqli_fetch_assoc($query);
+$row = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
 
 if (isset($_POST['update_notice'])) {
     $title = escape($con, $_POST['title']);

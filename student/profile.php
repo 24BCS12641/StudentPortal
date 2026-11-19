@@ -19,7 +19,7 @@ $query = mysqli_query($con, "
     LIMIT 1
 ");
 
-$student = mysqli_fetch_assoc($query);
+$student = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
 
 $pic = !empty($student['s_pic']) && file_exists("../uploads/profile_pictures/" . $student['s_pic'])
     ? "../uploads/profile_pictures/" . $student['s_pic']

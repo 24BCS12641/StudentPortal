@@ -39,7 +39,7 @@ if (!$query || mysqli_num_rows($query) === 0) {
     exit();
 }
 
-$data = mysqli_fetch_assoc($query);
+$data = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
 
 if (isset($_POST['save_grade'])) {
     $marks = (int)$_POST['marks'];

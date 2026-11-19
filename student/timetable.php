@@ -19,7 +19,7 @@ $st_q = mysqli_query($con, "
     WHERE s.user_id='$user_id'
     LIMIT 1
 ");
-$student = mysqli_fetch_assoc($st_q);
+$student = ($st_q && mysqli_num_rows($st_q) > 0) ? mysqli_fetch_assoc($st_q) : [];
 $student_id = $student['student_id'] ?? 0;
 $course_id = $student['course_id'] ?? 2; // Default BCA course_id
 $semester = $student['semester'] ?? 4;

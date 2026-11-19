@@ -15,7 +15,7 @@ $subj_col = get_subject_col($con);
 
 // Get student_id
 $st_query = mysqli_query($con, "SELECT student_id FROM students WHERE user_id='$user_id' LIMIT 1");
-$student = mysqli_fetch_assoc($st_query);
+$student = ($st_query && mysqli_num_rows($st_query) > 0) ? mysqli_fetch_assoc($st_query) : [];
 $student_id = $student['student_id'] ?? 0;
 
 $preset_assignment_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;

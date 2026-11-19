@@ -33,7 +33,7 @@ if (!$query || mysqli_num_rows($query) === 0) {
     exit();
 }
 
-$row = mysqli_fetch_assoc($query);
+$row = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
 
 // Fetch departments & courses
 $depts = [];
