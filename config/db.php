@@ -455,8 +455,6 @@ if (!function_exists('auto_heal_schema')) {
 
 // Run auto-heal silently
 auto_heal_schema($con);
-?>
-
 // Global Safe Fetch Assoc Helper
 if (!function_exists('safe_fetch_assoc')) {
     function safe_fetch_assoc($result) {
@@ -468,3 +466,4 @@ if (!function_exists('safe_fetch_assoc')) {
         return [];
     }
 }
+?>
