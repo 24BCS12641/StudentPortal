@@ -460,9 +460,11 @@ auto_heal_schema($con);
 // Global Safe Fetch Assoc Helper
 if (!function_exists('safe_fetch_assoc')) {
     function safe_fetch_assoc($result) {
+        // Return the first row as associative array if $result is a valid mysqli_result
         if ($result && is_object($result) && mysqli_num_rows($result) > 0) {
-            return safe_fetch_assoc($result);
+            return mysqli_fetch_assoc($result);
         }
+        // Fallback to empty array for false results or no rows
         return [];
     }
 }
