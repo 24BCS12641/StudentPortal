@@ -68,7 +68,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-trophy"></i> Student Grades & Evaluation Records</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($query); ?> Grades</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($query); ?> Grades</span>
         </div>
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <form method="GET" class="search-toolbar">
@@ -98,8 +98,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($query && mysqli_num_rows($query) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($query)): 
+                    <?php if ($query && safe_num_rows($query) > 0): ?>
+                        <?php while ($row = safe_fetch_assoc($query)): 
                             $marks = (int)$row['marks'];
                             $badge_class = ($marks >= 80) ? 'badge-success' : (($marks >= 50) ? 'badge-primary' : 'badge-danger');
                         ?>

@@ -14,7 +14,7 @@ $subj_col = get_subject_col($con);
 
 // Get student_id
 $st_query = mysqli_query($con, "SELECT student_id FROM students WHERE user_id='$user_id' LIMIT 1");
-$student = ($st_query && mysqli_num_rows($st_query) > 0) ? mysqli_fetch_assoc($st_query) : [];
+$student = ($st_query && safe_num_rows($st_query) > 0) ? safe_fetch_assoc($st_query) : [];
 $student_id = $student['student_id'] ?? 0;
 
 $query = mysqli_query($con, "
@@ -37,7 +37,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-paper-plane"></i> My Turned-In Submissions</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($query); ?> Submissions</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($query); ?> Submissions</span>
         </div>
         <a href="view_assignments.php" class="btn btn-primary" style="background:#2563eb;">
             <i class="fa-solid fa-plus-circle"></i> Browse Coursework
@@ -58,8 +58,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($query && mysqli_num_rows($query) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($query)): 
+                    <?php if ($query && safe_num_rows($query) > 0): ?>
+                        <?php while ($row = safe_fetch_assoc($query)): 
                             $final_marks = $row['eval_marks'] ?? $row['marks'];
                             $final_remarks = $row['eval_remarks'] ?? $row['remarks'];
                             $is_graded = ($final_marks !== null && $final_marks !== '');

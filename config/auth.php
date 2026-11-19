@@ -84,8 +84,8 @@ if (!function_exists('get_current_user_data')) {
     function get_current_user_data($con) {
         $user_id = $_SESSION['user_id'] ?? 0;
         $res = mysqli_query($con, "SELECT * FROM users WHERE id='$user_id'");
-        if ($res && mysqli_num_rows($res) > 0) {
-            return mysqli_fetch_assoc($res);
+        if ($res && safe_num_rows($res) > 0) {
+            return safe_fetch_assoc($res);
         }
         return [
             'id' => $user_id,

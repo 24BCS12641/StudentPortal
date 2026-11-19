@@ -14,7 +14,7 @@ $subj_col = get_subject_col($con);
 
 // Get faculty record (resilient)
 $f_query = @mysqli_query($con, "SELECT * FROM faculty WHERE user_id='$user_id' LIMIT 1");
-$faculty = ($f_query && mysqli_num_rows($f_query) > 0) ? mysqli_fetch_assoc($f_query) : [];
+$faculty = ($f_query && safe_num_rows($f_query) > 0) ? safe_fetch_assoc($f_query) : [];
 $faculty_id = $faculty['faculty_id'] ?? 0;
 
 // Metrics (Safe & Resilient)
@@ -159,8 +159,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($recent_submissions && mysqli_num_rows($recent_submissions) > 0): ?>
-                        <?php while ($subm = mysqli_fetch_assoc($recent_submissions)): 
+                    <?php if ($recent_submissions && safe_num_rows($recent_submissions) > 0): ?>
+                        <?php while ($subm = safe_fetch_assoc($recent_submissions)): 
                             $is_graded = isset($subm['marks']) && $subm['marks'] !== null;
                         ?>
                             <tr>

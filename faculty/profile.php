@@ -19,7 +19,7 @@ $query = mysqli_query($con, "
     LIMIT 1
 ");
 
-$faculty = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
+$faculty = ($query && safe_num_rows($query) > 0) ? safe_fetch_assoc($query) : [];
 
 $pic = !empty($faculty['f_pic']) && file_exists("../uploads/profile_pictures/" . $faculty['f_pic'])
     ? "../uploads/profile_pictures/" . $faculty['f_pic']

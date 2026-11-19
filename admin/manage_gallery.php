@@ -50,7 +50,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-images"></i> Campus Photo Gallery & Visual Media</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($photos); ?> Photos</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($photos); ?> Photos</span>
         </div>
         <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('galleryModal').style.display='flex'">
             <i class="fa-solid fa-plus"></i> Add Gallery Image
@@ -59,8 +59,8 @@ include("../includes/navbar.php");
 
     <div class="card-body">
         <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px;">
-            <?php if ($photos && mysqli_num_rows($photos) > 0): ?>
-                <?php while ($p = mysqli_fetch_assoc($photos)): ?>
+            <?php if ($photos && safe_num_rows($photos) > 0): ?>
+                <?php while ($p = safe_fetch_assoc($photos)): ?>
                     <div style="border:1px solid var(--border-color); border-radius:var(--radius-md); overflow:hidden; background:var(--bg-card); box-shadow:var(--shadow-sm);">
                         <div style="height:180px; overflow:hidden; position:relative;">
                             <img src="<?php echo htmlspecialchars($p['image_url']); ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" style="width:100%; height:100%; object-fit:cover;">

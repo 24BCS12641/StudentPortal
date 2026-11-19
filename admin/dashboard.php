@@ -52,10 +52,10 @@ $dept_stats_q = @mysqli_query($con, "
     LEFT JOIN students s ON d.department_id = s.department_id
     GROUP BY d.department_id
 ");
-if ($dept_stats_q && mysqli_num_rows($dept_stats_q) > 0) {
+if ($dept_stats_q && safe_num_rows($dept_stats_q) > 0) {
     $dept_labels = [];
     $dept_counts = [];
-    while ($ds = mysqli_fetch_assoc($dept_stats_q)) {
+    while ($ds = safe_fetch_assoc($dept_stats_q)) {
         $dept_labels[] = $ds['code'];
         $dept_counts[] = (int)$ds['student_count'] + 20; // Realistic visual demo distribution
     }
@@ -204,8 +204,8 @@ include("../includes/navbar.php");
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($recent_admissions && mysqli_num_rows($recent_admissions) > 0): ?>
-                            <?php while ($adm = mysqli_fetch_assoc($recent_admissions)): ?>
+                        <?php if ($recent_admissions && safe_num_rows($recent_admissions) > 0): ?>
+                            <?php while ($adm = safe_fetch_assoc($recent_admissions)): ?>
                                 <tr>
                                     <td>
                                         <strong><?php echo htmlspecialchars($adm['student_name']); ?></strong>
@@ -253,8 +253,8 @@ include("../includes/navbar.php");
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($recent_students && mysqli_num_rows($recent_students) > 0): ?>
-                            <?php while ($s = mysqli_fetch_assoc($recent_students)): ?>
+                        <?php if ($recent_students && safe_num_rows($recent_students) > 0): ?>
+                            <?php while ($s = safe_fetch_assoc($recent_students)): ?>
                                 <tr>
                                     <td>
                                         <strong><?php echo htmlspecialchars($s['name']); ?></strong>

@@ -13,8 +13,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
     // Find student
     $find = mysqli_query($con, "SELECT user_id FROM students WHERE student_id='$student_id' LIMIT 1");
-    if ($find && mysqli_num_rows($find) > 0) {
-        $student = ($find && mysqli_num_rows($find) > 0) ? mysqli_fetch_assoc($find) : [];
+    if ($find && safe_num_rows($find) > 0) {
+        $student = ($find && safe_num_rows($find) > 0) ? safe_fetch_assoc($find) : [];
         $user_id = $student['user_id'];
 
         // Clean up related records

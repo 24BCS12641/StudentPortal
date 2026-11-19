@@ -26,13 +26,13 @@ $query = mysqli_query($con, "
     LIMIT 1
 ");
 
-if (!$query || mysqli_num_rows($query) === 0) {
+if (!$query || safe_num_rows($query) === 0) {
     set_flash("danger", "Subject not found.");
     header("Location: manage_subjects.php");
     exit();
 }
 
-$row = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
+$row = ($query && safe_num_rows($query) > 0) ? safe_fetch_assoc($query) : [];
 
 // Faculty list
 $faculty_list = mysqli_query($con, "
@@ -54,7 +54,7 @@ if (isset($_POST['update_subject'])) {
     } else {
         // Check duplicate code
         $check = mysqli_query($con, "SELECT subject_id FROM subjects WHERE subject_code='$subject_code' AND subject_id != '$subject_id' LIMIT 1");
-        if (mysqli_num_rows($check) > 0) {
+        if (safe_num_rows($check) > 0) {
             $error = "Another subject with code '$subject_code' already exists.";
         } else {
             $faculty_val = ($faculty_id === "NULL") ? "NULL" : "'$faculty_id'";
@@ -112,8 +112,8 @@ include("../includes/navbar.php");
                 <label class="form-label">Assigned Faculty Incharge</label>
                 <select name="faculty_id" class="form-control">
                     <option value="">-- Unassigned --</option>
-                    <?php if ($faculty_list && mysqli_num_rows($faculty_list) > 0): ?>
-                        <?php while ($f = mysqli_fetch_assoc($faculty_list)): ?>
+                    <?php if ($faculty_list && safe_num_rows($faculty_list) > 0): ?>
+                        <?php while ($f = safe_fetch_assoc($faculty_list)): ?>
                             <option value="<?php echo $f['faculty_id']; ?>" <?php echo ($row['faculty_id'] == $f['faculty_id']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($f['name']); ?> (<?php echo htmlspecialchars($f['department']); ?>)
                             </option>

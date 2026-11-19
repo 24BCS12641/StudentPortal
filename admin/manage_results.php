@@ -88,7 +88,7 @@ $stat_passed = 0;
 $stat_o_grade = 0;
 $stat_marks_sum = 0;
 $stat_res = mysqli_query($con, "SELECT total_marks, marks_obtained, grade, status FROM results");
-while ($sr = mysqli_fetch_assoc($stat_res)) {
+while ($sr = safe_fetch_assoc($stat_res)) {
     $stat_total++;
     if ($sr['status'] === 'Pass') $stat_passed++;
     if ($sr['grade'] === 'O' || $sr['grade'] === 'A+') $stat_o_grade++;
@@ -215,8 +215,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($results_query && mysqli_num_rows($results_query) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($results_query)): 
+                    <?php if ($results_query && safe_num_rows($results_query) > 0): ?>
+                        <?php while ($row = safe_fetch_assoc($results_query)): 
                             $grade = $row['grade'];
                             $badge = ($grade === 'O' || $grade === 'A+') ? 'badge-success' : (($grade === 'A' || $grade === 'B+') ? 'badge-primary' : (($grade === 'B' || $grade === 'C') ? 'badge-warning' : 'badge-danger'));
                             $status_badge = ($row['status'] === 'Pass') ? 'badge-success' : 'badge-danger';
@@ -293,7 +293,7 @@ include("../includes/navbar.php");
                     <option value="">-- Choose Student --</option>
                     <?php 
                     mysqli_data_seek($students_list, 0);
-                    while ($st = mysqli_fetch_assoc($students_list)): ?>
+                    while ($st = safe_fetch_assoc($students_list)): ?>
                         <option value="<?php echo $st['student_id']; ?>" data-course="<?php echo $st['course_id']; ?>" data-sem="<?php echo $st['semester']; ?>">
                             <?php echo htmlspecialchars($st['name']); ?> (Roll: <?php echo htmlspecialchars($st['roll_no']); ?> - <?php echo htmlspecialchars($st['course_name'] ?? 'B.Tech'); ?>)
                         </option>
@@ -308,7 +308,7 @@ include("../includes/navbar.php");
                         <option value="">-- Degree Program --</option>
                         <?php 
                         mysqli_data_seek($courses_list, 0);
-                        while ($co = mysqli_fetch_assoc($courses_list)): ?>
+                        while ($co = safe_fetch_assoc($courses_list)): ?>
                             <option value="<?php echo $co['course_id']; ?>"><?php echo htmlspecialchars($co['code'] . ' - ' . $co['name']); ?></option>
                         <?php endwhile; ?>
                     </select>

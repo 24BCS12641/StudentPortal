@@ -61,7 +61,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-building-columns"></i> Academic Departments & Faculties</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($departments); ?> Departments</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($departments); ?> Departments</span>
         </div>
         <button type="button" class="btn btn-primary btn-sm" onclick="openDeptModal()">
             <i class="fa-solid fa-plus"></i> Add New Department
@@ -81,8 +81,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($departments && mysqli_num_rows($departments) > 0): ?>
-                        <?php while ($d = mysqli_fetch_assoc($departments)): ?>
+                    <?php if ($departments && safe_num_rows($departments) > 0): ?>
+                        <?php while ($d = safe_fetch_assoc($departments)): ?>
                             <tr>
                                 <td>
                                     <span class="badge badge-primary"><i class="fa-solid <?php echo htmlspecialchars($d['icon']); ?> me-1"></i> <?php echo htmlspecialchars($d['code']); ?></span>

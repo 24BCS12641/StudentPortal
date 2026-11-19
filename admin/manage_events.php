@@ -63,7 +63,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-calendar-check"></i> Campus Events, Hackathons & Convocations</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($events); ?> Scheduled</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($events); ?> Scheduled</span>
         </div>
         <button type="button" class="btn btn-primary btn-sm" onclick="openEventModal()">
             <i class="fa-solid fa-plus"></i> Schedule New Event
@@ -83,8 +83,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($events && mysqli_num_rows($events) > 0): ?>
-                        <?php while ($e = mysqli_fetch_assoc($events)): ?>
+                    <?php if ($events && safe_num_rows($events) > 0): ?>
+                        <?php while ($e = safe_fetch_assoc($events)): ?>
                             <tr>
                                 <td>
                                     <strong><i class="fa-regular fa-calendar text-primary me-1"></i> <?php echo date('d M Y', strtotime($e['event_date'])); ?></strong>

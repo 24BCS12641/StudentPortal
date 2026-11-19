@@ -56,7 +56,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-user-plus"></i> Online Admissions & Application Reviews</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($query); ?> Applications</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($query); ?> Applications</span>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
             <a href="manage_admissions.php" class="btn btn-secondary btn-sm <?php echo empty($filter_status) ? 'btn-primary' : ''; ?>">All</a>
@@ -82,8 +82,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($query && mysqli_num_rows($query) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($query)): ?>
+                    <?php if ($query && safe_num_rows($query) > 0): ?>
+                        <?php while ($row = safe_fetch_assoc($query)): ?>
                             <tr>
                                 <td>
                                     <strong><?php echo htmlspecialchars($row['application_no']); ?></strong>

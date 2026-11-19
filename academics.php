@@ -52,8 +52,8 @@ include("includes/public_navbar.php");
         </div>
 
         <div class="row g-4">
-            <?php if ($depts_q && mysqli_num_rows($depts_q) > 0): ?>
-                <?php while ($d = mysqli_fetch_assoc($depts_q)): ?>
+            <?php if ($depts_q && safe_num_rows($depts_q) > 0): ?>
+                <?php while ($d = safe_fetch_assoc($depts_q)): ?>
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" id="dept<?php echo $d['department_id']; ?>">
                         <div class="univ-card p-4">
                             <div class="dept-icon-box">
@@ -107,8 +107,8 @@ include("includes/public_navbar.php");
         </div>
 
         <div class="row g-4">
-            <?php if ($ug_courses_q && mysqli_num_rows($ug_courses_q) > 0): ?>
-                <?php while ($ug = mysqli_fetch_assoc($ug_courses_q)): ?>
+            <?php if ($ug_courses_q && safe_num_rows($ug_courses_q) > 0): ?>
+                <?php while ($ug = safe_fetch_assoc($ug_courses_q)): ?>
                     <div class="col-lg-6" data-aos="fade-up" id="course<?php echo $ug['course_id']; ?>">
                         <div class="univ-card p-4">
                             <div class="d-flex justify-content-between align-items-start mb-2">
@@ -153,8 +153,8 @@ include("includes/public_navbar.php");
         </div>
 
         <div class="row g-4">
-            <?php if ($pg_courses_q && mysqli_num_rows($pg_courses_q) > 0): ?>
-                <?php while ($pg = mysqli_fetch_assoc($pg_courses_q)): ?>
+            <?php if ($pg_courses_q && safe_num_rows($pg_courses_q) > 0): ?>
+                <?php while ($pg = safe_fetch_assoc($pg_courses_q)): ?>
                     <div class="col-lg-6" data-aos="fade-up" id="course<?php echo $pg['course_id']; ?>">
                         <div class="univ-card p-4">
                             <div class="d-flex justify-content-between align-items-start mb-2">

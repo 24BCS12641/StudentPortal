@@ -15,7 +15,7 @@ $subj_col = get_subject_col($con);
 
 // Get student_id
 $st_query = mysqli_query($con, "SELECT student_id FROM students WHERE user_id='$user_id' LIMIT 1");
-$student = ($st_query && mysqli_num_rows($st_query) > 0) ? mysqli_fetch_assoc($st_query) : [];
+$student = ($st_query && safe_num_rows($st_query) > 0) ? safe_fetch_assoc($st_query) : [];
 $student_id = $student['student_id'] ?? 0;
 
 $preset_assignment_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -51,9 +51,9 @@ if (isset($_POST['submit_solution'])) {
             }
 
             if (move_uploaded_file($_FILES['file']['tmp_name'], "../uploads/submissions/" . $filename)) {
-                if (mysqli_num_rows($check_sub) > 0) {
+                if (safe_num_rows($check_sub) > 0) {
                     // Update existing submission with new file
-                    $existing = mysqli_fetch_assoc($check_sub);
+                    $existing = safe_fetch_assoc($check_sub);
                     mysqli_query($con, "
                         UPDATE submissions 
                         SET file_path='$filename', submitted_at=NOW(), status='Resubmitted'
@@ -105,8 +105,8 @@ include("../includes/navbar.php");
                 <label class="form-label">Select Coursework Assignment <span class="required">*</span></label>
                 <select name="assignment_id" class="form-control" required id="assignmentSelect" onchange="showDeadlineInfo(this)">
                     <option value="">-- Choose Assignment --</option>
-                    <?php if ($assignments && mysqli_num_rows($assignments) > 0): ?>
-                        <?php while ($a = mysqli_fetch_assoc($assignments)): 
+                    <?php if ($assignments && safe_num_rows($assignments) > 0): ?>
+                        <?php while ($a = safe_fetch_assoc($assignments)): 
                             $selected = ($preset_assignment_id == $a['assignment_id']) ? 'selected' : '';
                         ?>
                             <option value="<?php echo $a['assignment_id']; ?>" data-deadline="<?php echo $a['deadline']; ?>" <?php echo $selected; ?>>

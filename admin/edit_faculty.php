@@ -26,13 +26,13 @@ $query = mysqli_query($con, "
     LIMIT 1
 ");
 
-if (!$query || mysqli_num_rows($query) === 0) {
+if (!$query || safe_num_rows($query) === 0) {
     set_flash("danger", "Faculty record not found.");
     header("Location: manage_faculty.php");
     exit();
 }
 
-$row = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
+$row = ($query && safe_num_rows($query) > 0) ? safe_fetch_assoc($query) : [];
 
 if (isset($_POST['update_faculty'])) {
     $name = escape($con, $_POST['name']);
@@ -45,7 +45,7 @@ if (isset($_POST['update_faculty'])) {
     } else {
         // Check duplicate email
         $check = mysqli_query($con, "SELECT id FROM users WHERE email='$email' AND id != '{$row['user_id']}' LIMIT 1");
-        if (mysqli_num_rows($check) > 0) {
+        if (safe_num_rows($check) > 0) {
             $error = "Another user is already using the email address '$email'.";
         } else {
             $pic_sql_user = "";

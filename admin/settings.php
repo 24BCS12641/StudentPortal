@@ -13,7 +13,7 @@ $user_id = $_SESSION['user_id'];
 $error = "";
 
 $query = mysqli_query($con, "SELECT * FROM users WHERE id='$user_id' LIMIT 1");
-$user = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
+$user = ($query && safe_num_rows($query) > 0) ? safe_fetch_assoc($query) : [];
 
 // Handle Profile Update
 if (isset($_POST['update_profile'])) {
@@ -24,7 +24,7 @@ if (isset($_POST['update_profile'])) {
         $error = "Name and email are required.";
     } else {
         $check = mysqli_query($con, "SELECT id FROM users WHERE email='$email' AND id != '$user_id' LIMIT 1");
-        if (mysqli_num_rows($check) > 0) {
+        if (safe_num_rows($check) > 0) {
             $error = "Another account is already using the email address '$email'.";
         } else {
             mysqli_query($con, "UPDATE users SET name='$name', email='$email' WHERE id='$user_id'");

@@ -19,13 +19,13 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $notice_id = (int)$_GET['id'];
 
 $query = mysqli_query($con, "SELECT * FROM notices WHERE notice_id='$notice_id' LIMIT 1");
-if (!$query || mysqli_num_rows($query) === 0) {
+if (!$query || safe_num_rows($query) === 0) {
     set_flash("danger", "Notice not found.");
     header("Location: manage_notices.php");
     exit();
 }
 
-$row = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
+$row = ($query && safe_num_rows($query) > 0) ? safe_fetch_assoc($query) : [];
 
 if (isset($_POST['update_notice'])) {
     $title = escape($con, $_POST['title']);

@@ -180,7 +180,7 @@ if ($con) {
         ");
 
         $check_admin = @mysqli_query($con, "SELECT id FROM `users` WHERE `email`='admin@gmail.com' LIMIT 1");
-        if (!$check_admin || mysqli_num_rows($check_admin) === 0) {
+        if (!$check_admin || safe_num_rows($check_admin) === 0) {
             @mysqli_query($con, "
                 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile_picture`, `phone`)
                 VALUES (1, 'System Administrator', 'admin@gmail.com', 'admin123', 'admin', 'default.png', '+91 98765 43210')
@@ -189,7 +189,7 @@ if ($con) {
         }
 
         $check_faculty = @mysqli_query($con, "SELECT id FROM `users` WHERE `email`='faculty@gmail.com' LIMIT 1");
-        if (!$check_faculty || mysqli_num_rows($check_faculty) === 0) {
+        if (!$check_faculty || safe_num_rows($check_faculty) === 0) {
             @mysqli_query($con, "
                 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile_picture`, `phone`)
                 VALUES (2, 'Dr. Rajesh Sharma', 'faculty@gmail.com', 'faculty123', 'faculty', 'default.png', '+91 98111 22334')
@@ -198,7 +198,7 @@ if ($con) {
         }
 
         $check_student = @mysqli_query($con, "SELECT id FROM `users` WHERE `email`='student@gmail.com' LIMIT 1");
-        if (!$check_student || mysqli_num_rows($check_student) === 0) {
+        if (!$check_student || safe_num_rows($check_student) === 0) {
             @mysqli_query($con, "
                 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile_picture`, `phone`)
                 VALUES (5, 'Sunny Kumar', 'student@gmail.com', 'student123', 'student', 'default.png', '+91 91234 56789')
@@ -208,7 +208,7 @@ if ($con) {
 
         // Guarantee Student profile for user 5 exists
         $check_st_profile = @mysqli_query($con, "SELECT student_id FROM `students` WHERE `user_id`=5 LIMIT 1");
-        if (!$check_st_profile || mysqli_num_rows($check_st_profile) === 0) {
+        if (!$check_st_profile || safe_num_rows($check_st_profile) === 0) {
             @mysqli_query($con, "
                 INSERT INTO `students` (`user_id`, `roll_no`, `department_id`, `course_id`, `course`, `semester`, `dob`, `gender`, `address`)
                 VALUES (5, '24BCS12641', 1, 2, 'BCA', 4, '2004-06-15', 'Male', 'Campus Block 4, Tech City')
@@ -263,7 +263,7 @@ if (!function_exists('get_subject_col')) {
         if ($resolved_col !== null) return $resolved_col;
 
         $res = @mysqli_query($con, "SHOW COLUMNS FROM `subjects` LIKE 'suject_name'");
-        if ($res && mysqli_num_rows($res) > 0) {
+        if ($res && safe_num_rows($res) > 0) {
             $resolved_col = 'suject_name';
         } else {
             $resolved_col = 'subject_name';
@@ -279,7 +279,7 @@ if (!function_exists('auto_heal_schema')) {
 
         // Check if courses table is missing
         $c_check = @mysqli_query($con, "SHOW TABLES LIKE 'courses'");
-        if (!$c_check || mysqli_num_rows($c_check) == 0) {
+        if (!$c_check || safe_num_rows($c_check) == 0) {
             @mysqli_query($con, "CREATE TABLE IF NOT EXISTS `departments` (
                 `department_id` INT AUTO_INCREMENT PRIMARY KEY,
                 `name` VARCHAR(150) NOT NULL,
@@ -446,3 +446,13 @@ if (!function_exists('auto_heal_schema')) {
 // Run auto-heal silently
 auto_heal_schema($con);
 ?>
+
+// Global Safe Fetch Assoc Helper
+if (!function_exists('safe_fetch_assoc')) {
+    function safe_fetch_assoc($result) {
+        if ($result && is_object($result) && mysqli_num_rows($result) > 0) {
+            return safe_fetch_assoc($result);
+        }
+        return [];
+    }
+}

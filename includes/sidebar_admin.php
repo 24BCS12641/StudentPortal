@@ -10,7 +10,7 @@ $admin_name = $_SESSION['name'] ?? 'Administrator';
 $admin_pic = "../assets/images/default-user.png";
 if (isset($con) && isset($_SESSION['user_id'])) {
     $u_res = mysqli_query($con, "SELECT profile_picture FROM users WHERE id='" . $_SESSION['user_id'] . "'");
-    if ($u_res && $u_row = mysqli_fetch_assoc($u_res)) {
+    if ($u_res && $u_row = safe_fetch_assoc($u_res)) {
         if (!empty($u_row['profile_picture']) && file_exists("../uploads/profile_pictures/" . $u_row['profile_picture'])) {
             $admin_pic = "../uploads/profile_pictures/" . $u_row['profile_picture'];
         }

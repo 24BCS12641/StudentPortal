@@ -57,7 +57,7 @@ $d_res = @mysqli_query($con, "
     ORDER BY d.department_id ASC
 ");
 if ($d_res) {
-    while ($d = mysqli_fetch_assoc($d_res)) {
+    while ($d = safe_fetch_assoc($d_res)) {
         $depts_list[] = $d;
         $total_all_students += (int)$d['student_count'];
     }
@@ -67,7 +67,7 @@ if ($d_res) {
 $courses_list = [];
 $c_res = @mysqli_query($con, "SELECT course_id, department_id, name, code FROM courses ORDER BY name ASC");
 if ($c_res) {
-    while ($c = mysqli_fetch_assoc($c_res)) {
+    while ($c = safe_fetch_assoc($c_res)) {
         $courses_list[] = $c;
     }
 }
@@ -223,8 +223,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($query && mysqli_num_rows($query) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($query)): 
+                    <?php if ($query && safe_num_rows($query) > 0): ?>
+                        <?php while ($row = safe_fetch_assoc($query)): 
                             $pic = !empty($row['profile_picture']) && file_exists("../uploads/profile_pictures/" . $row['profile_picture'])
                                 ? "../uploads/profile_pictures/" . $row['profile_picture']
                                 : "../assets/images/default-user.png";

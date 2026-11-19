@@ -74,7 +74,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-graduation-cap"></i> Academic Degree Programs</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($courses); ?> Programs</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($courses); ?> Programs</span>
         </div>
         <button type="button" class="btn btn-primary btn-sm" onclick="openCourseModal()">
             <i class="fa-solid fa-plus"></i> Add New Program
@@ -96,8 +96,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($courses && mysqli_num_rows($courses) > 0): ?>
-                        <?php while ($c = mysqli_fetch_assoc($courses)): ?>
+                    <?php if ($courses && safe_num_rows($courses) > 0): ?>
+                        <?php while ($c = safe_fetch_assoc($courses)): ?>
                             <tr>
                                 <td><span class="badge badge-primary"><?php echo htmlspecialchars($c['code']); ?></span></td>
                                 <td>
@@ -147,7 +147,7 @@ include("../includes/navbar.php");
                     <select name="department_id" id="cDeptId" class="form-control" required>
                         <?php 
                         mysqli_data_seek($depts_list, 0);
-                        while ($d = mysqli_fetch_assoc($depts_list)): 
+                        while ($d = safe_fetch_assoc($depts_list)): 
                         ?>
                             <option value="<?php echo $d['department_id']; ?>"><?php echo htmlspecialchars($d['name']); ?> (<?php echo $d['code']; ?>)</option>
                         <?php endwhile; ?>

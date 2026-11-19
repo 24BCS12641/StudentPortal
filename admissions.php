@@ -52,8 +52,8 @@ if (isset($_GET['track_app'])) {
             WHERE a.application_no='$track_query' OR a.email='$track_query'
             LIMIT 1
         ");
-        if ($check_q && mysqli_num_rows($check_q) > 0) {
-            $status_result = mysqli_fetch_assoc($check_q);
+        if ($check_q && safe_num_rows($check_q) > 0) {
+            $status_result = safe_fetch_assoc($check_q);
         } else {
             $error_msg = "No admission record found matching '<strong>" . htmlspecialchars($track_query) . "</strong>'. Please double-check your Application Number or Email.";
         }
@@ -279,10 +279,10 @@ include("includes/public_navbar.php");
                                 <label class="form-label fw-bold text-navy">Target Degree Program <span class="text-danger">*</span></label>
                                 <select name="course_id" class="form-select" required>
                                     <option value="">-- Choose Course --</option>
-                                    <?php if ($courses_list && mysqli_num_rows($courses_list) > 0): ?>
+                                    <?php if ($courses_list && safe_num_rows($courses_list) > 0): ?>
                                         <?php 
                                         $pre_sel = isset($_GET['course_id']) ? (int)$_GET['course_id'] : 0;
-                                        while ($crs = mysqli_fetch_assoc($courses_list)): 
+                                        while ($crs = safe_fetch_assoc($courses_list)): 
                                         ?>
                                             <option value="<?php echo $crs['course_id']; ?>" <?php echo ($pre_sel == $crs['course_id']) ? 'selected' : ''; ?>>
                                                 [<?php echo $crs['degree_level']; ?>] <?php echo htmlspecialchars($crs['name']); ?> (<?php echo $crs['code']; ?>)

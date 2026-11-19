@@ -15,7 +15,7 @@ $subj_col = get_subject_col($con);
 
 // Get faculty ID
 $f_query = mysqli_query($con, "SELECT faculty_id FROM faculty WHERE user_id='$user_id' LIMIT 1");
-$faculty = ($f_query && mysqli_num_rows($f_query) > 0) ? mysqli_fetch_assoc($f_query) : [];
+$faculty = ($f_query && safe_num_rows($f_query) > 0) ? safe_fetch_assoc($f_query) : [];
 $faculty_id = $faculty['faculty_id'] ?? 0;
 
 // Get available subjects
@@ -94,8 +94,8 @@ include("../includes/navbar.php");
                     <label class="form-label">Subject / Course <span class="required">*</span></label>
                     <select name="subject_id" class="form-control" required>
                         <option value="">-- Select Subject --</option>
-                        <?php if ($subjects && mysqli_num_rows($subjects) > 0): ?>
-                            <?php while ($s = mysqli_fetch_assoc($subjects)): ?>
+                        <?php if ($subjects && safe_num_rows($subjects) > 0): ?>
+                            <?php while ($s = safe_fetch_assoc($subjects)): ?>
                                 <option value="<?php echo $s['subject_id']; ?>" <?php echo (isset($_POST['subject_id']) && $_POST['subject_id'] == $s['subject_id']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($s['subject_name']); ?> (<?php echo htmlspecialchars($s['subject_code']); ?>)
                                 </option>

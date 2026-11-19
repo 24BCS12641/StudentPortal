@@ -75,7 +75,7 @@ include("../includes/navbar.php");
                     <option value="">All Departments</option>
                     <?php 
                     mysqli_data_seek($depts_list, 0);
-                    while ($dl = mysqli_fetch_assoc($depts_list)): 
+                    while ($dl = safe_fetch_assoc($depts_list)): 
                     ?>
                         <option value="<?php echo $dl['department_id']; ?>" <?php if ($dept_filter == $dl['department_id']) echo 'selected'; ?>>
                             <?php echo htmlspecialchars($dl['code']); ?> - <?php echo htmlspecialchars($dl['name']); ?>
@@ -126,8 +126,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($query && mysqli_num_rows($query) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($query)): 
+                    <?php if ($query && safe_num_rows($query) > 0): ?>
+                        <?php while ($row = safe_fetch_assoc($query)): 
                             $pic = !empty($row['profile_picture']) && file_exists("../uploads/profile_pictures/" . $row['profile_picture'])
                                 ? "../uploads/profile_pictures/" . $row['profile_picture']
                                 : "../assets/images/default-user.png";

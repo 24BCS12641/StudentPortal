@@ -161,8 +161,8 @@ include("includes/public_navbar.php");
         </div>
 
         <div class="row g-4">
-            <?php if ($faculty_q && mysqli_num_rows($faculty_q) > 0): ?>
-                <?php while ($f = mysqli_fetch_assoc($faculty_q)): ?>
+            <?php if ($faculty_q && safe_num_rows($faculty_q) > 0): ?>
+                <?php while ($f = safe_fetch_assoc($faculty_q)): ?>
                     <div class="col-lg-4 col-md-6" data-aos="fade-up">
                         <div class="univ-card p-4 text-center">
                             <div class="mx-auto mb-3" style="width: 90px; height: 90px; border-radius: 50%; overflow: hidden; border: 3px solid var(--gold);">

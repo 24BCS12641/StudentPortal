@@ -15,7 +15,7 @@ if (isset($con) && isset($_SESSION['user_id'])) {
         FROM students 
         WHERE user_id='" . $_SESSION['user_id'] . "'
     ");
-    if ($u_res && $s_row = mysqli_fetch_assoc($u_res)) {
+    if ($u_res && $s_row = safe_fetch_assoc($u_res)) {
         if (!empty($s_row['profile_picture']) && file_exists("../uploads/profile_pictures/" . $s_row['profile_picture'])) {
             $student_pic = "../uploads/profile_pictures/" . $s_row['profile_picture'];
         }

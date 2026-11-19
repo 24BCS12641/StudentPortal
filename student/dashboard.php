@@ -21,12 +21,12 @@ $st_query = @mysqli_query($con, "
     LIMIT 1
 ");
 
-if (!$st_query || mysqli_num_rows($st_query) === 0) {
+if (!$st_query || safe_num_rows($st_query) === 0) {
     // Fallback: get user info directly
     $st_query = @mysqli_query($con, "SELECT id, name, email, role FROM users WHERE id='$user_id' LIMIT 1");
 }
 
-$student = ($st_query && mysqli_num_rows($st_query) > 0) ? mysqli_fetch_assoc($st_query) : [];
+$student = ($st_query && safe_num_rows($st_query) > 0) ? safe_fetch_assoc($st_query) : [];
 $student_id = $student['student_id'] ?? $student['id'] ?? 0;
 
 // Metrics (Safe & Resilient)
@@ -46,8 +46,8 @@ $total_submissions = safe_count($con, "submissions", "student_id='$student_id'")
 $grade_q = @mysqli_query($con, "SELECT marks FROM grades WHERE student_id='$student_id'");
 $grade_sum = 0;
 $grade_count = 0;
-if ($grade_q && mysqli_num_rows($grade_q) > 0) {
-    while ($g = mysqli_fetch_assoc($grade_q)) {
+if ($grade_q && safe_num_rows($grade_q) > 0) {
+    while ($g = safe_fetch_assoc($grade_q)) {
         $grade_sum += $g['marks'];
         $grade_count++;
     }
@@ -181,8 +181,8 @@ include("../includes/navbar.php");
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($recent_assignments && mysqli_num_rows($recent_assignments) > 0): ?>
-                            <?php while ($a = mysqli_fetch_assoc($recent_assignments)): 
+                        <?php if ($recent_assignments && safe_num_rows($recent_assignments) > 0): ?>
+                            <?php while ($a = safe_fetch_assoc($recent_assignments)): 
                                 $is_submitted = !empty($a['submitted_id']);
                                 $is_overdue = (strtotime($a['deadline']) < strtotime(date('Y-m-d')));
                             ?>
@@ -231,8 +231,8 @@ include("../includes/navbar.php");
         </div>
         <div class="card-body">
             <div class="notice-feed">
-                <?php if ($recent_notices && mysqli_num_rows($recent_notices) > 0): ?>
-                    <?php while ($n = mysqli_fetch_assoc($recent_notices)): ?>
+                <?php if ($recent_notices && safe_num_rows($recent_notices) > 0): ?>
+                    <?php while ($n = safe_fetch_assoc($recent_notices)): ?>
                         <div class="notice-card">
                             <div class="notice-header">
                                 <div class="notice-title"><?php echo htmlspecialchars($n['title']); ?></div>

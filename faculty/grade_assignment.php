@@ -33,13 +33,13 @@ $query = mysqli_query($con, "
     LIMIT 1
 ");
 
-if (!$query || mysqli_num_rows($query) === 0) {
+if (!$query || safe_num_rows($query) === 0) {
     set_flash("danger", "Submission record not found.");
     header("Location: view_submissions.php");
     exit();
 }
 
-$data = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
+$data = ($query && safe_num_rows($query) > 0) ? safe_fetch_assoc($query) : [];
 
 if (isset($_POST['save_grade'])) {
     $marks = (int)$_POST['marks'];
@@ -66,8 +66,8 @@ if (isset($_POST['save_grade'])) {
             LIMIT 1
         ");
 
-        if (mysqli_num_rows($check_grade) > 0) {
-            $g_row = mysqli_fetch_assoc($check_grade);
+        if (safe_num_rows($check_grade) > 0) {
+            $g_row = safe_fetch_assoc($check_grade);
             mysqli_query($con, "
                 UPDATE grades 
                 SET marks='$marks', remarks='$remarks', subject_id=$subject_id 

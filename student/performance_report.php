@@ -21,7 +21,7 @@ $st_query = mysqli_query($con, "
     LIMIT 1
 ");
 
-$student = ($st_query && mysqli_num_rows($st_query) > 0) ? mysqli_fetch_assoc($st_query) : [];
+$student = ($st_query && safe_num_rows($st_query) > 0) ? safe_fetch_assoc($st_query) : [];
 $student_id = $student['student_id'] ?? 0;
 
 // Attendance Calculations
@@ -46,7 +46,7 @@ $total_marks = 0;
 $graded_count = 0;
 $grades_list = [];
 if ($grades_q) {
-    while ($g = mysqli_fetch_assoc($grades_q)) {
+    while ($g = safe_fetch_assoc($grades_q)) {
         $grades_list[] = $g;
         $total_marks += (int)$g['marks'];
         $graded_count++;

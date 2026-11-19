@@ -21,7 +21,7 @@ $st_query = mysqli_query($con, "
     WHERE s.user_id = '$user_id'
     LIMIT 1
 ");
-$student = ($st_query && mysqli_num_rows($st_query) > 0) ? mysqli_fetch_assoc($st_query) : [];
+$student = ($st_query && safe_num_rows($st_query) > 0) ? safe_fetch_assoc($st_query) : [];
 $student_id = $student['student_id'] ?? 0;
 
 // 1. Fetch Official Semester Examination Results
@@ -40,7 +40,7 @@ if ($student_id > 0) {
         ORDER BY r.semester DESC, r.result_id ASC
     ");
     if ($res_q) {
-        while ($r = mysqli_fetch_assoc($res_q)) {
+        while ($r = safe_fetch_assoc($res_q)) {
             $exam_results[] = $r;
             $exam_total_marks += (int)$r['total_marks'];
             $exam_obtained_marks += (int)$r['marks_obtained'];
@@ -70,7 +70,7 @@ if ($student_id > 0) {
         ORDER BY g.grade_id DESC
     ");
     if ($asg_q) {
-        while ($g = mysqli_fetch_assoc($asg_q)) {
+        while ($g = safe_fetch_assoc($asg_q)) {
             $asg_grades[] = $g;
             $asg_total_marks += (int)$g['marks'];
             $asg_count++;

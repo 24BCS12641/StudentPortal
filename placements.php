@@ -207,8 +207,8 @@ include("includes/public_navbar.php");
         </div>
 
         <div class="row g-4">
-            <?php if ($placements_q && mysqli_num_rows($placements_q) > 0): ?>
-                <?php while ($p = mysqli_fetch_assoc($placements_q)): ?>
+            <?php if ($placements_q && safe_num_rows($placements_q) > 0): ?>
+                <?php while ($p = safe_fetch_assoc($placements_q)): ?>
                     <div class="col-lg-4 col-md-6" data-aos="fade-up">
                         <div class="univ-card p-4">
                             <div class="d-flex align-items-center gap-3 mb-3">

@@ -32,7 +32,7 @@ if (isset($_POST['add_subject'])) {
     } else {
         // Check duplicate subject code
         $check = mysqli_query($con, "SELECT subject_id FROM subjects WHERE subject_code='$subject_code' LIMIT 1");
-        if (mysqli_num_rows($check) > 0) {
+        if (safe_num_rows($check) > 0) {
             $error = "A subject with code '$subject_code' already exists.";
         } else {
             $faculty_val = ($faculty_id === "NULL") ? "NULL" : "'$faculty_id'";
@@ -89,8 +89,8 @@ include("../includes/navbar.php");
                 <label class="form-label">Assigned Faculty Incharge</label>
                 <select name="faculty_id" class="form-control">
                     <option value="">-- Select Faculty (Optional) --</option>
-                    <?php if ($faculty_list && mysqli_num_rows($faculty_list) > 0): ?>
-                        <?php while ($f = mysqli_fetch_assoc($faculty_list)): ?>
+                    <?php if ($faculty_list && safe_num_rows($faculty_list) > 0): ?>
+                        <?php while ($f = safe_fetch_assoc($faculty_list)): ?>
                             <option value="<?php echo $f['faculty_id']; ?>">
                                 <?php echo htmlspecialchars($f['name']); ?> (<?php echo htmlspecialchars($f['department']); ?>)
                             </option>

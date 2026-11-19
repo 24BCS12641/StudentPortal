@@ -63,7 +63,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-briefcase"></i> Corporate Placements & Salary Records</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($placements); ?> Records</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($placements); ?> Records</span>
         </div>
         <button type="button" class="btn btn-primary btn-sm" onclick="openPlacementModal()">
             <i class="fa-solid fa-plus"></i> Add Placement Record
@@ -84,8 +84,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($placements && mysqli_num_rows($placements) > 0): ?>
-                        <?php while ($p = mysqli_fetch_assoc($placements)): ?>
+                    <?php if ($placements && safe_num_rows($placements) > 0): ?>
+                        <?php while ($p = safe_fetch_assoc($placements)): ?>
                             <tr>
                                 <td>
                                     <strong><?php echo htmlspecialchars($p['student_name']); ?></strong>

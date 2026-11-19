@@ -13,7 +13,7 @@ $notices_count = 0;
 
 if (isset($con) && isset($_SESSION['user_id'])) {
     $nav_res = mysqli_query($con, "SELECT profile_picture FROM users WHERE id='" . $_SESSION['user_id'] . "'");
-    if ($nav_res && $nav_user = mysqli_fetch_assoc($nav_res)) {
+    if ($nav_res && $nav_user = safe_fetch_assoc($nav_res)) {
         if (!empty($nav_user['profile_picture']) && file_exists("../uploads/profile_pictures/" . $nav_user['profile_picture'])) {
             $navbar_avatar = "../uploads/profile_pictures/" . $nav_user['profile_picture'];
         }

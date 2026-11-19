@@ -19,7 +19,7 @@ $query = mysqli_query($con, "
     WHERE u.id='$user_id'
     LIMIT 1
 ");
-$student = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
+$student = ($query && safe_num_rows($query) > 0) ? safe_fetch_assoc($query) : [];
 
 $current_pic = !empty($student['s_pic']) && file_exists("../uploads/profile_pictures/" . $student['s_pic'])
     ? "../uploads/profile_pictures/" . $student['s_pic']

@@ -15,7 +15,7 @@ $subj_col = get_subject_col($con);
 
 // Get faculty ID
 $f_res = mysqli_query($con, "SELECT faculty_id, department FROM faculty WHERE user_id='$user_id' LIMIT 1");
-$faculty = ($f_res && mysqli_num_rows($f_res) > 0) ? mysqli_fetch_assoc($f_res) : [];
+$faculty = ($f_res && safe_num_rows($f_res) > 0) ? safe_fetch_assoc($f_res) : [];
 $faculty_id = $faculty['faculty_id'] ?? 0;
 
 // Fetch faculty courses & subjects
@@ -25,7 +25,7 @@ $subjects_q = mysqli_query($con, "
     ORDER BY `$subj_col` ASC
 ");
 $all_subjects = [];
-while ($sub = mysqli_fetch_assoc($subjects_q)) {
+while ($sub = safe_fetch_assoc($subjects_q)) {
     $all_subjects[] = $sub;
 }
 
@@ -74,7 +74,7 @@ if (isset($_POST['submit_batch_attendance'])) {
         ");
 
         if ($chk && safe_num_rows($chk) > 0) {
-            $existing_att = mysqli_fetch_assoc($chk);
+            $existing_att = safe_fetch_assoc($chk);
             @mysqli_query($con, "
                 UPDATE attendance 
                 SET status='$status', remarks='$remark', marked_by='$faculty_id', course_id='$crs_id', attendance_date='$att_date'
@@ -185,7 +185,7 @@ $initial_absent = 0;
 $initial_late = 0;
 $initial_excused = 0;
 if ($roster_q && safe_num_rows($roster_q) > 0) {
-    while ($st = mysqli_fetch_assoc($roster_q)) {
+    while ($st = safe_fetch_assoc($roster_q)) {
         $status = $st['existing_status'] ?? 'Present';
         if ($status === 'Present') $initial_present++;
         elseif ($status === 'Absent') $initial_absent++;

@@ -19,7 +19,7 @@ $st_q = mysqli_query($con, "
     WHERE s.user_id='$user_id'
     LIMIT 1
 ");
-$student = ($st_q && mysqli_num_rows($st_q) > 0) ? mysqli_fetch_assoc($st_q) : [];
+$student = ($st_q && safe_num_rows($st_q) > 0) ? safe_fetch_assoc($st_q) : [];
 $student_id = $student['student_id'] ?? 0;
 
 // Fetch fee records
@@ -36,7 +36,7 @@ $total_due = 0;
 $fees_list = [];
 
 if ($fees_q) {
-    while ($f = mysqli_fetch_assoc($fees_q)) {
+    while ($f = safe_fetch_assoc($fees_q)) {
         $fees_list[] = $f;
         $total_billed += (float)$f['total_amount'];
         $total_paid += (float)$f['paid_amount'];

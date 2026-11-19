@@ -25,7 +25,7 @@ if (isset($_POST['add_faculty'])) {
     } else {
         // Check duplicate email
         $check = mysqli_query($con, "SELECT id FROM users WHERE email='$email' LIMIT 1");
-        if (mysqli_num_rows($check) > 0) {
+        if (safe_num_rows($check) > 0) {
             $error = "A user account with email '$email' already exists.";
         } else {
             // Profile photo upload

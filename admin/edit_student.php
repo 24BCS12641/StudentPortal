@@ -27,24 +27,24 @@ $query = mysqli_query($con, "
     LIMIT 1
 ");
 
-if (!$query || mysqli_num_rows($query) === 0) {
+if (!$query || safe_num_rows($query) === 0) {
     set_flash("danger", "Student record not found.");
     header("Location: manage_students.php");
     exit();
 }
 
-$row = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
+$row = ($query && safe_num_rows($query) > 0) ? safe_fetch_assoc($query) : [];
 
 // Fetch departments & courses
 $depts = [];
 $d_res = mysqli_query($con, "SELECT department_id, name, code, icon FROM departments ORDER BY department_id ASC");
-while ($d = mysqli_fetch_assoc($d_res)) {
+while ($d = safe_fetch_assoc($d_res)) {
     $depts[] = $d;
 }
 
 $courses = [];
 $c_res = mysqli_query($con, "SELECT course_id, department_id, name, code FROM courses ORDER BY name ASC");
-while ($c = mysqli_fetch_assoc($c_res)) {
+while ($c = safe_fetch_assoc($c_res)) {
     $courses[] = $c;
 }
 
@@ -70,7 +70,7 @@ if (isset($_POST['update_student'])) {
     } else {
         // Check duplicate email for another user
         $check = mysqli_query($con, "SELECT id FROM users WHERE email='$email' AND id != '{$row['user_id']}' LIMIT 1");
-        if (mysqli_num_rows($check) > 0) {
+        if (safe_num_rows($check) > 0) {
             $error = "Another user is already using the email address '$email'.";
         } else {
             // Optional picture update

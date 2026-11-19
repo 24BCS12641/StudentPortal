@@ -181,8 +181,8 @@ include("includes/public_navbar.php");
         </div>
 
         <div class="row g-4">
-            <?php if ($courses_q && mysqli_num_rows($courses_q) > 0): ?>
-                <?php while ($c = mysqli_fetch_assoc($courses_q)): 
+            <?php if ($courses_q && safe_num_rows($courses_q) > 0): ?>
+                <?php while ($c = safe_fetch_assoc($courses_q)): 
                     $cat = 'General';
                     $cname = $c['name'];
                     if (stripos($cname, 'Computer Science') !== false || stripos($cname, 'B.Tech') !== false || stripos($cname, 'M.Tech') !== false) {
@@ -255,8 +255,8 @@ include("includes/public_navbar.php");
                 </div>
 
                 <div class="d-flex flex-column gap-3">
-                    <?php if ($notices_q && mysqli_num_rows($notices_q) > 0): ?>
-                        <?php while ($n = mysqli_fetch_assoc($notices_q)): ?>
+                    <?php if ($notices_q && safe_num_rows($notices_q) > 0): ?>
+                        <?php while ($n = safe_fetch_assoc($notices_q)): ?>
                             <div class="p-3 rounded-3 bg-light border-start border-4 border-primary">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <span class="badge bg-navy text-gold font-monospace"><?php echo htmlspecialchars($n['category']); ?></span>
@@ -282,8 +282,8 @@ include("includes/public_navbar.php");
                 </div>
 
                 <div class="d-flex flex-column gap-3">
-                    <?php if ($events_q && mysqli_num_rows($events_q) > 0): ?>
-                        <?php while ($e = mysqli_fetch_assoc($events_q)): ?>
+                    <?php if ($events_q && safe_num_rows($events_q) > 0): ?>
+                        <?php while ($e = safe_fetch_assoc($events_q)): ?>
                             <div class="event-card">
                                 <div class="event-date-box">
                                     <span class="event-day"><?php echo date('d', strtotime($e['event_date'])); ?></span>
@@ -345,8 +345,8 @@ include("includes/public_navbar.php");
 
         <!-- Student Star Achievers -->
         <div class="row g-4 mt-4">
-            <?php if ($placements_q && mysqli_num_rows($placements_q) > 0): ?>
-                <?php while ($p = mysqli_fetch_assoc($placements_q)): ?>
+            <?php if ($placements_q && safe_num_rows($placements_q) > 0): ?>
+                <?php while ($p = safe_fetch_assoc($placements_q)): ?>
                     <div class="col-md-3 col-sm-6" data-aos="fade-up">
                         <div class="univ-card p-3 text-center">
                             <div class="badge bg-warning bg-opacity-25 text-warning fw-bold mb-2">
@@ -416,8 +416,8 @@ include("includes/public_navbar.php");
         </div>
 
         <div class="row g-4">
-            <?php if ($gallery_q && mysqli_num_rows($gallery_q) > 0): ?>
-                <?php while ($g = mysqli_fetch_assoc($gallery_q)): ?>
+            <?php if ($gallery_q && safe_num_rows($gallery_q) > 0): ?>
+                <?php while ($g = safe_fetch_assoc($gallery_q)): ?>
                     <div class="col-lg-4 col-md-6" data-aos="zoom-in">
                         <div class="facility-card" style="height: 240px;">
                             <img src="<?php echo htmlspecialchars($g['image_url']); ?>" alt="<?php echo htmlspecialchars($g['title']); ?>">

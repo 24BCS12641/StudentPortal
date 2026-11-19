@@ -100,8 +100,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($course_stats && mysqli_num_rows($course_stats) > 0): ?>
-                        <?php while ($c = mysqli_fetch_assoc($course_stats)): 
+                    <?php if ($course_stats && safe_num_rows($course_stats) > 0): ?>
+                        <?php while ($c = safe_fetch_assoc($course_stats)): 
                             $pct = ($total_students > 0) ? round(($c['count'] / $total_students) * 100, 1) : 0;
                         ?>
                             <tr>

@@ -39,7 +39,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-envelope-open-text"></i> Public Contact Inquiries & Feedback</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($messages); ?> Messages</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($messages); ?> Messages</span>
         </div>
     </div>
 
@@ -57,8 +57,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($messages && mysqli_num_rows($messages) > 0): ?>
-                        <?php while ($m = mysqli_fetch_assoc($messages)): ?>
+                    <?php if ($messages && safe_num_rows($messages) > 0): ?>
+                        <?php while ($m = safe_fetch_assoc($messages)): ?>
                             <tr>
                                 <td><?php echo date('d M Y, h:i A', strtotime($m['submitted_at'])); ?></td>
                                 <td>

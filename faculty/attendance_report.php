@@ -125,7 +125,7 @@ include("../includes/navbar.php");
                     <option value="">All Subjects</option>
                     <?php 
                     mysqli_data_seek($subjects_list, 0);
-                    while ($sub = mysqli_fetch_assoc($subjects_list)): 
+                    while ($sub = safe_fetch_assoc($subjects_list)): 
                     ?>
                         <option value="<?php echo $sub['subject_id']; ?>" <?php if ($subject_filter == $sub['subject_id']) echo 'selected'; ?>>
                             <?php echo htmlspecialchars($sub['subject_code']); ?> - <?php echo htmlspecialchars($sub['subject_name']); ?>
@@ -179,8 +179,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($query && mysqli_num_rows($query) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($query)): 
+                    <?php if ($query && safe_num_rows($query) > 0): ?>
+                        <?php while ($row = safe_fetch_assoc($query)): 
                             $pic = !empty($row['profile_picture']) && file_exists("../uploads/profile_pictures/" . $row['profile_picture'])
                                 ? "../uploads/profile_pictures/" . $row['profile_picture']
                                 : "../assets/images/default-user.png";

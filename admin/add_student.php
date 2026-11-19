@@ -14,13 +14,13 @@ $error = "";
 // Fetch departments & courses
 $depts = [];
 $d_res = mysqli_query($con, "SELECT department_id, name, code, icon FROM departments ORDER BY department_id ASC");
-while ($d = mysqli_fetch_assoc($d_res)) {
+while ($d = safe_fetch_assoc($d_res)) {
     $depts[] = $d;
 }
 
 $courses = [];
 $c_res = mysqli_query($con, "SELECT course_id, department_id, name, code FROM courses ORDER BY name ASC");
-while ($c = mysqli_fetch_assoc($c_res)) {
+while ($c = safe_fetch_assoc($c_res)) {
     $courses[] = $c;
 }
 
@@ -49,12 +49,12 @@ if (isset($_POST['add_student'])) {
     } else {
         // Check duplicate email
         $check = mysqli_query($con, "SELECT id FROM users WHERE email='$email' LIMIT 1");
-        if (mysqli_num_rows($check) > 0) {
+        if (safe_num_rows($check) > 0) {
             $error = "A user account with email '$email' already exists.";
         } else {
             // Check duplicate roll number
             $check_roll = mysqli_query($con, "SELECT student_id FROM students WHERE roll_no='$roll_no' LIMIT 1");
-            if (mysqli_num_rows($check_roll) > 0) {
+            if (safe_num_rows($check_roll) > 0) {
                 $error = "A student with Roll Number '$roll_no' is already registered.";
             } else {
                 // Profile picture upload

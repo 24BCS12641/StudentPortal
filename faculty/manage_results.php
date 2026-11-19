@@ -14,19 +14,19 @@ $subj_col = get_subject_col($con);
 
 // Get faculty details
 $f_res = mysqli_query($con, "SELECT faculty_id, department FROM faculty WHERE user_id='$user_id' LIMIT 1");
-$faculty = ($f_res && mysqli_num_rows($f_res) > 0) ? mysqli_fetch_assoc($f_res) : [];
+$faculty = ($f_res && safe_num_rows($f_res) > 0) ? safe_fetch_assoc($f_res) : [];
 $faculty_id = $faculty['faculty_id'] ?? 0;
 
 // Fetch all subjects & courses
 $subjects_q = mysqli_query($con, "SELECT subject_id, `$subj_col` AS subject_name, subject_code, course, semester FROM subjects ORDER BY `$subj_col` ASC");
 $all_subjects = [];
-while ($sub = mysqli_fetch_assoc($subjects_q)) {
+while ($sub = safe_fetch_assoc($subjects_q)) {
     $all_subjects[] = $sub;
 }
 
 $courses_q = mysqli_query($con, "SELECT course_id, department_id, name, code FROM courses ORDER BY name ASC");
 $all_courses = [];
-while ($crs = mysqli_fetch_assoc($courses_q)) {
+while ($crs = safe_fetch_assoc($courses_q)) {
     $all_courses[] = $crs;
 }
 
@@ -94,8 +94,8 @@ if (isset($_POST['publish_batch_results'])) {
             LIMIT 1
         ");
 
-        if ($chk && mysqli_num_rows($chk) > 0) {
-            $ex = mysqli_fetch_assoc($chk);
+        if ($chk && safe_num_rows($chk) > 0) {
+            $ex = safe_fetch_assoc($chk);
             mysqli_query($con, "
                 UPDATE results
                 SET marks_obtained='$m_obtained', total_marks='$total_m', grade='$grade', status='$status', published_at=NOW()
@@ -182,7 +182,7 @@ $marks_count = 0;
 $highest_score = 0;
 
 if ($roster_q && safe_num_rows($roster_q) > 0) {
-    while ($cand = mysqli_fetch_assoc($roster_q)) {
+    while ($cand = safe_fetch_assoc($roster_q)) {
         if ($cand['marks_obtained'] !== null) {
             $marks_count++;
             $marks_sum += (int)$cand['marks_obtained'];
@@ -482,8 +482,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($results_history_q && mysqli_num_rows($results_history_q) > 0): ?>
-                        <?php while ($r = mysqli_fetch_assoc($results_history_q)): ?>
+                    <?php if ($results_history_q && safe_num_rows($results_history_q) > 0): ?>
+                        <?php while ($r = safe_fetch_assoc($results_history_q)): ?>
                             <tr>
                                 <td><strong><?php echo htmlspecialchars($r['student_name']); ?></strong></td>
                                 <td><span class="badge badge-dark"><?php echo htmlspecialchars($r['roll_no']); ?></span></td>

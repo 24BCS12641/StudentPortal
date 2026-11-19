@@ -33,7 +33,7 @@ $schedule = [
 ];
 
 if ($timetable_q) {
-    while ($slot = mysqli_fetch_assoc($timetable_q)) {
+    while ($slot = safe_fetch_assoc($timetable_q)) {
         $schedule[$slot['day_of_week']][] = $slot;
     }
 }

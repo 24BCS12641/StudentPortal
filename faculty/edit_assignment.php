@@ -21,13 +21,13 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $assignment_id = (int)$_GET['id'];
 
 $query = mysqli_query($con, "SELECT * FROM assignments WHERE assignment_id='$assignment_id' LIMIT 1");
-if (!$query || mysqli_num_rows($query) === 0) {
+if (!$query || safe_num_rows($query) === 0) {
     set_flash("danger", "Assignment not found.");
     header("Location: view_assignments.php");
     exit();
 }
 
-$row = ($query && mysqli_num_rows($query) > 0) ? mysqli_fetch_assoc($query) : [];
+$row = ($query && safe_num_rows($query) > 0) ? safe_fetch_assoc($query) : [];
 
 // Subjects
 $subjects = mysqli_query($con, "SELECT subject_id, `$subj_col` AS subject_name, subject_code FROM subjects ORDER BY `$subj_col` ASC");
@@ -108,8 +108,8 @@ include("../includes/navbar.php");
                     <label class="form-label">Subject / Course <span class="required">*</span></label>
                     <select name="subject_id" class="form-control" required>
                         <option value="">-- Select Subject --</option>
-                        <?php if ($subjects && mysqli_num_rows($subjects) > 0): ?>
-                            <?php while ($s = mysqli_fetch_assoc($subjects)): ?>
+                        <?php if ($subjects && safe_num_rows($subjects) > 0): ?>
+                            <?php while ($s = safe_fetch_assoc($subjects)): ?>
                                 <option value="<?php echo $s['subject_id']; ?>" <?php echo ($row['subject_id'] == $s['subject_id']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($s['subject_name']); ?> (<?php echo htmlspecialchars($s['subject_code']); ?>)
                                 </option>

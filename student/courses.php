@@ -20,7 +20,7 @@ $st_q = mysqli_query($con, "
     WHERE s.user_id='$user_id'
     LIMIT 1
 ");
-$student = ($st_q && mysqli_num_rows($st_q) > 0) ? mysqli_fetch_assoc($st_q) : [];
+$student = ($st_q && safe_num_rows($st_q) > 0) ? safe_fetch_assoc($st_q) : [];
 $student_id = $student['student_id'] ?? 0;
 $course_id = $student['course_id'] ?? 0;
 
@@ -34,7 +34,7 @@ if ($course_id > 0) {
         WHERE c.course_id='$course_id'
         LIMIT 1
     ");
-    $course_info = mysqli_fetch_assoc($c_res);
+    $course_info = safe_fetch_assoc($c_res);
 }
 
 // Fetch active subjects in this curriculum
@@ -104,8 +104,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($subjects_q && mysqli_num_rows($subjects_q) > 0): ?>
-                        <?php while ($sub = mysqli_fetch_assoc($subjects_q)): 
+                    <?php if ($subjects_q && safe_num_rows($subjects_q) > 0): ?>
+                        <?php while ($sub = safe_fetch_assoc($subjects_q)): 
                             $name = $sub['subject_name'] ?? ($sub['suject_name'] ?? 'Core Subject');
                         ?>
                             <tr>

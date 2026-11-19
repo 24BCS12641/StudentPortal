@@ -31,8 +31,8 @@ if (isset($_POST['login'])) {
         $query = "SELECT * FROM users WHERE email='$email' LIMIT 1";
         $result = mysqli_query($con, $query);
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
+        if ($result && safe_num_rows($result) > 0) {
+            $row = safe_fetch_assoc($result);
 
             // Support both hashed passwords and legacy plain text
             $password_valid = false;

@@ -31,7 +31,7 @@ if (isset($_POST['register'])) {
         // Check if email already exists
         $check = mysqli_query($con, "SELECT id FROM users WHERE email='$email' LIMIT 1");
 
-        if ($check && mysqli_num_rows($check) > 0) {
+        if ($check && safe_num_rows($check) > 0) {
             $error = "An account with this email address already exists.";
         } elseif (!$check) {
             $error = "Database query error: " . mysqli_error($con);
@@ -46,14 +46,14 @@ if (isset($_POST['register'])) {
                 if ($role === "student") {
                     $final_roll = !empty($roll_no) ? $roll_no : 'STU-' . time();
                     $check_cid = @mysqli_query($con, "SHOW COLUMNS FROM students LIKE 'course_id'");
-                    if ($check_cid && mysqli_num_rows($check_cid) > 0) {
+                    if ($check_cid && safe_num_rows($check_cid) > 0) {
                         mysqli_query($con, "INSERT INTO students (user_id, roll_no, department_id, course_id, semester) VALUES ('$user_id', '$final_roll', 1, 2, '$semester')");
                     } else {
                         mysqli_query($con, "INSERT INTO students (user_id, roll_no, course, semester) VALUES ('$user_id', '$final_roll', '$course', '$semester')");
                     }
                 } elseif ($role === "faculty") {
                     $check_did = @mysqli_query($con, "SHOW COLUMNS FROM faculty LIKE 'department_id'");
-                    if ($check_did && mysqli_num_rows($check_did) > 0) {
+                    if ($check_did && safe_num_rows($check_did) > 0) {
                         mysqli_query($con, "INSERT INTO faculty (user_id, department_id, designation) VALUES ('$user_id', 1, '$designation')");
                     } else {
                         mysqli_query($con, "INSERT INTO faculty (user_id, department, designation) VALUES ('$user_id', '$department', '$designation')");

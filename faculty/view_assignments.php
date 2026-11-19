@@ -14,7 +14,7 @@ $subj_col = get_subject_col($con);
 
 // Get faculty ID
 $f_query = mysqli_query($con, "SELECT faculty_id FROM faculty WHERE user_id='$user_id' LIMIT 1");
-$faculty = ($f_query && mysqli_num_rows($f_query) > 0) ? mysqli_fetch_assoc($f_query) : [];
+$faculty = ($f_query && safe_num_rows($f_query) > 0) ? safe_fetch_assoc($f_query) : [];
 $faculty_id = $faculty['faculty_id'] ?? 0;
 
 $search = "";
@@ -49,7 +49,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-file-pen"></i> My Assignments & Coursework</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($query); ?> Assignments</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($query); ?> Assignments</span>
         </div>
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <form method="GET" class="search-toolbar">
@@ -82,8 +82,8 @@ include("../includes/navbar.php");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($query && mysqli_num_rows($query) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($query)): 
+                    <?php if ($query && safe_num_rows($query) > 0): ?>
+                        <?php while ($row = safe_fetch_assoc($query)): 
                             $is_overdue = (strtotime($row['deadline']) < strtotime(date('Y-m-d')));
                         ?>
                             <tr>

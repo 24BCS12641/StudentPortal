@@ -31,7 +31,7 @@ include("../includes/navbar.php");
     <div class="card-header">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3><i class="fa-solid fa-bullhorn"></i> Official Campus Circulars & Announcements</h3>
-            <span class="badge badge-primary"><?php echo mysqli_num_rows($query); ?> Notices</span>
+            <span class="badge badge-primary"><?php echo safe_num_rows($query); ?> Notices</span>
         </div>
         <form method="GET" class="search-toolbar">
             <div class="search-input-group">
@@ -46,8 +46,8 @@ include("../includes/navbar.php");
     </div>
     <div class="card-body">
         <div class="notice-feed">
-            <?php if ($query && mysqli_num_rows($query) > 0): ?>
-                <?php while ($row = mysqli_fetch_assoc($query)): ?>
+            <?php if ($query && safe_num_rows($query) > 0): ?>
+                <?php while ($row = safe_fetch_assoc($query)): ?>
                     <div class="notice-card">
                         <div class="notice-header">
                             <div>
