@@ -179,7 +179,17 @@ if ($con) {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         ");
 
-        $check_admin = @mysqli_query($con, "SELECT id FROM `users` WHERE `email`='admin@gmail.com' LIMIT 1");
+        // Ensure safe_num_rows is available early
+if (!function_exists('safe_num_rows')) {
+    function safe_num_rows($result) {
+        if ($result && is_object($result)) {
+            return mysqli_num_rows($result);
+        }
+        return 0;
+    }
+}
+
+$check_admin = @mysqli_query($con, "SELECT id FROM `users` WHERE `email`='admin@gmail.com' LIMIT 1");
         if (!$check_admin || safe_num_rows($check_admin) === 0) {
             @mysqli_query($con, "
                 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile_picture`, `phone`)
