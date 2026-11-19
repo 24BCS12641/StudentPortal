@@ -48,7 +48,7 @@ include("includes/public_navbar.php");
         <div class="text-center mb-5" data-aos="fade-up">
             <span class="section-tag">Schools of Study</span>
             <h2 class="section-title">Academic Departments & Research Centers</h2>
-            <p class="section-subtitle">Our academic ecosystem is structured into five autonomous schools promoting cross-disciplinary investigation.</p>
+            <p class="section-subtitle">Our academic ecosystem is structured into <?php echo safe_num_rows($depts_q); ?> autonomous academic schools & departments promoting cross-disciplinary investigation.</p>
         </div>
 
         <div class="row g-4">

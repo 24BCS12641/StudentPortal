@@ -56,10 +56,17 @@ if (isset($_GET['delete'])) {
     exit();
 }
 
+$search = isset($_GET['search']) ? escape($con, trim($_GET['search'])) : '';
+$where_search = "";
+if (!empty($search)) {
+    $where_search = "WHERE c.name LIKE '%$search%' OR c.code LIKE '%$search%' OR d.name LIKE '%$search%' OR d.code LIKE '%$search%'";
+}
+
 $courses = mysqli_query($con, "
     SELECT c.*, d.name AS dept_name, d.code AS dept_code
     FROM courses c
     JOIN departments d ON c.department_id = d.department_id
+    $where_search
     ORDER BY c.degree_level DESC, c.course_id ASC
 ");
 
@@ -76,9 +83,21 @@ include("../includes/navbar.php");
             <h3><i class="fa-solid fa-graduation-cap"></i> Academic Degree Programs</h3>
             <span class="badge badge-primary"><?php echo safe_num_rows($courses); ?> Programs</span>
         </div>
-        <button type="button" class="btn btn-primary btn-sm" onclick="openCourseModal()">
-            <i class="fa-solid fa-plus"></i> Add New Program
-        </button>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <form method="GET" class="search-toolbar">
+                <div class="search-input-group">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" name="search" class="form-control" placeholder="Search programs or departments..." value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+                <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-search"></i></button>
+                <?php if (!empty($search)): ?>
+                    <a href="manage_courses.php" class="btn btn-outline" title="Clear Search"><i class="fa-solid fa-rotate-left"></i></a>
+                <?php endif; ?>
+            </form>
+            <button type="button" class="btn btn-primary" onclick="openCourseModal()">
+                <i class="fa-solid fa-plus"></i> Add New Program
+            </button>
+        </div>
     </div>
 
     <div class="card-body" style="padding:0;">

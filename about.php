@@ -38,7 +38,7 @@ include("includes/public_navbar.php");
                 <span class="section-tag">Historical Legacy</span>
                 <h2 class="section-title">Founded in 1988 on the Tenets of Truth, Integrity & Innovation</h2>
                 <p class="text-secondary mb-3" style="line-height: 1.8;">
-                    Founded under the State University Act of 1988, <strong>Apex Imperial University</strong> began with a modest cohort of 120 engineering scholars and 12 faculty fellows. Today, the university has evolved into a premier national hub spanning five specialized academic schools and 40+ degree programs.
+                    Founded under the State University Act of 1988, <strong>Apex Imperial University</strong> began with a modest cohort of 120 engineering scholars and 12 faculty fellows. Today, the university has evolved into a premier national hub spanning <?php echo safe_count($con, 'departments'); ?> specialized academic schools and <?php echo safe_count($con, 'courses'); ?>+ degree programs.
                 </p>
                 <p class="text-secondary mb-4" style="line-height: 1.8;">
                     Recognized by the University Grants Commission (UGC) and approved by AICTE, our institution holds the prestigious <strong>NAAC A++ accreditation</strong> with a cumulative grade point average of 3.82.

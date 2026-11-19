@@ -77,9 +77,9 @@ include("../includes/sidebar_admin.php");
 include("../includes/navbar.php");
 ?>
 
-<!-- Department Overview Stats Grid -->
+<!-- Institutional Overview Stats Grid -->
 <div class="stats-grid" style="margin-bottom: 24px;">
-    <!-- All Departments Card -->
+    <!-- All Departments Summary Card -->
     <a href="manage_students.php" style="text-decoration:none;">
         <div class="stat-card <?php echo ($dept_filter === 0) ? 'primary' : ''; ?>" style="cursor:pointer; border: <?php echo ($dept_filter === 0) ? '2px solid #2563eb' : '1px solid #e2e8f0'; ?>;">
             <div class="stat-info">
@@ -88,41 +88,65 @@ include("../includes/navbar.php");
                 <div class="stat-subtext"><i class="fa-solid fa-users"></i> All Departments Active</div>
             </div>
             <div class="stat-icon-wrapper" style="background:#dbeafe; color:#2563eb;">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+        </div>
+    </a>
+
+    <!-- Academic Departments Card -->
+    <a href="manage_departments.php" style="text-decoration:none;">
+        <div class="stat-card" style="cursor:pointer;">
+            <div class="stat-info">
+                <div class="stat-label">Academic Departments</div>
+                <div class="stat-value"><?php echo count($depts_list); ?></div>
+                <div class="stat-subtext"><i class="fa-solid fa-building-columns"></i> Autonomous Schools</div>
+            </div>
+            <div class="stat-icon-wrapper" style="background:#fef3c7; color:#b45309;">
                 <i class="fa-solid fa-building-columns"></i>
             </div>
         </div>
     </a>
 
-    <?php 
-    $dept_colors = [
-        1 => ['bg' => '#dbeafe', 'color' => '#1d4ed8'], // CSE Blue
-        2 => ['bg' => '#fef3c7', 'color' => '#b45309'], // BBA Amber
-        3 => ['bg' => '#dcfce7', 'color' => '#15803d'], // IT Green
-        4 => ['bg' => '#ffedd5', 'color' => '#c2410c'], // MECH Orange
-        5 => ['bg' => '#f3e8ff', 'color' => '#7e22ce']  // HAJ Purple
-    ];
-    foreach ($depts_list as $d): 
-        $d_id = (int)$d['department_id'];
-        $c_theme = $dept_colors[$d_id] ?? ['bg' => '#f1f5f9', 'color' => '#475569'];
-        $is_selected = ($dept_filter === $d_id);
-    ?>
-        <a href="manage_students.php?dept=<?php echo $d_id; ?>" style="text-decoration:none;">
-            <div class="stat-card" style="cursor:pointer; <?php if ($is_selected) echo 'border:2px solid ' . $c_theme['color'] . '; box-shadow:0 8px 20px rgba(0,0,0,0.08);'; ?>">
-                <div class="stat-info">
-                    <div class="stat-label"><?php echo htmlspecialchars($d['code']); ?> &bull; Department</div>
-                    <div class="stat-value" style="<?php if ($is_selected) echo 'color:' . $c_theme['color'] . ';'; ?>">
-                        <?php echo (int)$d['student_count']; ?>
-                    </div>
-                    <div class="stat-subtext" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?php echo htmlspecialchars($d['name']); ?>">
-                        <?php echo htmlspecialchars($d['name']); ?>
-                    </div>
-                </div>
-                <div class="stat-icon-wrapper" style="background:<?php echo $c_theme['bg']; ?>; color:<?php echo $c_theme['color']; ?>;">
-                    <i class="fa-solid <?php echo htmlspecialchars($d['icon'] ?: 'fa-laptop-code'); ?>"></i>
-                </div>
+    <!-- Degree Programs Card -->
+    <a href="manage_courses.php" style="text-decoration:none;">
+        <div class="stat-card" style="cursor:pointer;">
+            <div class="stat-info">
+                <div class="stat-label">Degree Programs</div>
+                <div class="stat-value"><?php echo count($courses_list); ?></div>
+                <div class="stat-subtext"><i class="fa-solid fa-book-open"></i> Undergrad & Postgrad</div>
             </div>
-        </a>
-    <?php endforeach; ?>
+            <div class="stat-icon-wrapper" style="background:#dcfce7; color:#15803d;">
+                <i class="fa-solid fa-certificate"></i>
+            </div>
+        </div>
+    </a>
+
+    <!-- Active Filter Status Card -->
+    <?php
+    $active_filter_label = "All Departments Active";
+    $active_filter_val = $total_all_students . " Enrolled";
+    $active_filter_icon = "fa-list-check";
+    if ($dept_filter > 0) {
+        foreach ($depts_list as $dl) {
+            if ((int)$dl['department_id'] === $dept_filter) {
+                $active_filter_label = $dl['code'] . " Department";
+                $active_filter_val = (int)$dl['student_count'] . " Scholars";
+                $active_filter_icon = $dl['icon'] ?: "fa-graduation-cap";
+                break;
+            }
+        }
+    }
+    ?>
+    <div class="stat-card purple">
+        <div class="stat-info">
+            <div class="stat-label">Selected Scope</div>
+            <div class="stat-value" style="font-size: 20px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?php echo htmlspecialchars($active_filter_label); ?></div>
+            <div class="stat-subtext"><i class="fa-solid fa-filter"></i> <?php echo htmlspecialchars($active_filter_val); ?></div>
+        </div>
+        <div class="stat-icon-wrapper">
+            <i class="fa-solid <?php echo htmlspecialchars($active_filter_icon); ?>"></i>
+        </div>
+    </div>
 </div>
 
 <!-- Department Filter Tabs -->

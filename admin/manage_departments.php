@@ -50,7 +50,16 @@ if (isset($_GET['delete'])) {
     exit();
 }
 
-$departments = mysqli_query($con, "SELECT * FROM departments ORDER BY department_id ASC");
+$search = isset($_GET['search']) ? escape($con, trim($_GET['search'])) : '';
+if (!empty($search)) {
+    $departments = mysqli_query($con, "
+        SELECT * FROM departments 
+        WHERE name LIKE '%$search%' OR code LIKE '%$search%' OR head_of_dept LIKE '%$search%'
+        ORDER BY department_id ASC
+    ");
+} else {
+    $departments = mysqli_query($con, "SELECT * FROM departments ORDER BY department_id ASC");
+}
 
 include("../includes/header.php");
 include("../includes/sidebar_admin.php");
@@ -63,9 +72,21 @@ include("../includes/navbar.php");
             <h3><i class="fa-solid fa-building-columns"></i> Academic Departments & Faculties</h3>
             <span class="badge badge-primary"><?php echo safe_num_rows($departments); ?> Departments</span>
         </div>
-        <button type="button" class="btn btn-primary btn-sm" onclick="openDeptModal()">
-            <i class="fa-solid fa-plus"></i> Add New Department
-        </button>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <form method="GET" class="search-toolbar">
+                <div class="search-input-group">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" name="search" class="form-control" placeholder="Search by name, code, HOD..." value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+                <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-search"></i></button>
+                <?php if (!empty($search)): ?>
+                    <a href="manage_departments.php" class="btn btn-outline" title="Clear Search"><i class="fa-solid fa-rotate-left"></i></a>
+                <?php endif; ?>
+            </form>
+            <button type="button" class="btn btn-primary" onclick="openDeptModal()">
+                <i class="fa-solid fa-plus"></i> Add Department
+            </button>
+        </div>
     </div>
 
     <div class="card-body" style="padding:0;">

@@ -14,20 +14,24 @@ $search = "";
 if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
     $search = escape($con, $_GET['search']);
     $query = mysqli_query($con, "
-        SELECT faculty.*, users.name, users.email
+        SELECT faculty.*, users.name, users.email, d.name AS dept_name, d.code AS dept_code
         FROM faculty
         INNER JOIN users ON faculty.user_id = users.id
+        LEFT JOIN departments d ON faculty.department_id = d.department_id
         WHERE users.name LIKE '%$search%'
            OR users.email LIKE '%$search%'
            OR faculty.department LIKE '%$search%'
            OR faculty.designation LIKE '%$search%'
+           OR d.name LIKE '%$search%'
+           OR d.code LIKE '%$search%'
         ORDER BY faculty.faculty_id DESC
     ");
 } else {
     $query = mysqli_query($con, "
-        SELECT faculty.*, users.name, users.email
+        SELECT faculty.*, users.name, users.email, d.name AS dept_name, d.code AS dept_code
         FROM faculty
         INNER JOIN users ON faculty.user_id = users.id
+        LEFT JOIN departments d ON faculty.department_id = d.department_id
         ORDER BY faculty.faculty_id DESC
     ");
 }
@@ -89,7 +93,7 @@ include("../includes/navbar.php");
                                         </div>
                                     </div>
                                 </td>
-                                <td><span class="badge badge-info"><?php echo htmlspecialchars($row['department']); ?></span></td>
+                                <td><span class="badge badge-info"><?php echo htmlspecialchars($row['department'] ?: $row['dept_name'] ?: 'General'); ?></span></td>
                                 <td><strong><?php echo htmlspecialchars($row['designation']); ?></strong></td>
                                 <td style="text-align:right;">
                                     <div class="table-actions">

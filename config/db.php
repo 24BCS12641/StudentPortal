@@ -455,6 +455,10 @@ if (!function_exists('auto_heal_schema')) {
 
 // Run auto-heal silently
 auto_heal_schema($con);
+require_once __DIR__ . '/seed_data.php';
+if ($con && (safe_count($con, 'departments') < 30 || safe_count($con, 'students') < 30)) {
+    seed_dummy_data($con);
+}
 // Global Safe Fetch Assoc Helper
 if (!function_exists('safe_fetch_assoc')) {
     function safe_fetch_assoc($result) {

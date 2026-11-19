@@ -42,22 +42,36 @@ $recent_students = @mysqli_query($con, "
     LIMIT 5
 ");
 
-// Department Wise Count for Chart.js
-$dept_labels = ['CSE', 'IT', 'AI', 'MBA', 'MECH'];
-$dept_counts = [45, 38, 30, 42, 25];
+// Department Wise Count for Chart.js (Top 5 + Other Schools)
+$dept_labels = ['CSE', 'IT', 'AI', 'MBA', 'MECH', 'Other Schools'];
+$dept_counts = [45, 38, 30, 42, 25, 60];
+$chart_colors = ['#4f46e5', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
 
 $dept_stats_q = @mysqli_query($con, "
     SELECT d.code, d.name, COUNT(s.student_id) as student_count
     FROM departments d
     LEFT JOIN students s ON d.department_id = s.department_id
     GROUP BY d.department_id
+    ORDER BY student_count DESC, d.department_id ASC
 ");
 if ($dept_stats_q && safe_num_rows($dept_stats_q) > 0) {
     $dept_labels = [];
     $dept_counts = [];
+    $other_count = 0;
+    $idx = 0;
     while ($ds = safe_fetch_assoc($dept_stats_q)) {
-        $dept_labels[] = $ds['code'];
-        $dept_counts[] = (int)$ds['student_count'] + 20; // Realistic visual demo distribution
+        $c_val = (int)$ds['student_count'];
+        if ($idx < 5) {
+            $dept_labels[] = $ds['code'];
+            $dept_counts[] = $c_val > 0 ? $c_val : 1;
+        } else {
+            $other_count += ($c_val > 0 ? $c_val : 1);
+        }
+        $idx++;
+    }
+    if ($other_count > 0) {
+        $dept_labels[] = "Other Schools (" . ($idx - 5) . ")";
+        $dept_counts[] = $other_count;
     }
 }
 
@@ -329,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function () {
             labels: <?php echo json_encode($dept_labels); ?>,
             datasets: [{
                 data: <?php echo json_encode($dept_counts); ?>,
-                backgroundColor: ['#4f46e5', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
+                backgroundColor: <?php echo json_encode($chart_colors); ?>,
                 borderWidth: 2,
                 borderColor: '#ffffff'
             }]
