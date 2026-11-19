@@ -162,6 +162,59 @@ if ($con) {
                 (6, 4, 'B.Tech in Mechanical Engineering & Automation', 'BTECH-MECH', 'Undergraduate', '4 Years', 8)
             ");
         }
+
+        // Guarantee default system users exist (Admin, Faculty, Student)
+        @mysqli_query($con, "
+            CREATE TABLE IF NOT EXISTS `users` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `name` varchar(100) NOT NULL,
+                `email` varchar(100) NOT NULL,
+                `password` varchar(255) NOT NULL,
+                `role` enum('admin','faculty','student') NOT NULL,
+                `profile_picture` varchar(255) DEFAULT 'default.png',
+                `phone` varchar(20) DEFAULT NULL,
+                `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `email` (`email`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+
+        $check_admin = @mysqli_query($con, "SELECT id FROM `users` WHERE `email`='admin@gmail.com' LIMIT 1");
+        if (!$check_admin || mysqli_num_rows($check_admin) === 0) {
+            @mysqli_query($con, "
+                INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile_picture`, `phone`)
+                VALUES (1, 'System Administrator', 'admin@gmail.com', 'admin123', 'admin', 'default.png', '+91 98765 43210')
+                ON DUPLICATE KEY UPDATE `password`='admin123'
+            ");
+        }
+
+        $check_faculty = @mysqli_query($con, "SELECT id FROM `users` WHERE `email`='faculty@gmail.com' LIMIT 1");
+        if (!$check_faculty || mysqli_num_rows($check_faculty) === 0) {
+            @mysqli_query($con, "
+                INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile_picture`, `phone`)
+                VALUES (2, 'Dr. Rajesh Sharma', 'faculty@gmail.com', 'faculty123', 'faculty', 'default.png', '+91 98111 22334')
+                ON DUPLICATE KEY UPDATE `password`='faculty123'
+            ");
+        }
+
+        $check_student = @mysqli_query($con, "SELECT id FROM `users` WHERE `email`='student@gmail.com' LIMIT 1");
+        if (!$check_student || mysqli_num_rows($check_student) === 0) {
+            @mysqli_query($con, "
+                INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `profile_picture`, `phone`)
+                VALUES (5, 'Sunny Kumar', 'student@gmail.com', 'student123', 'student', 'default.png', '+91 91234 56789')
+                ON DUPLICATE KEY UPDATE `password`='student123'
+            ");
+        }
+
+        // Guarantee Student profile for user 5 exists
+        $check_st_profile = @mysqli_query($con, "SELECT student_id FROM `students` WHERE `user_id`=5 LIMIT 1");
+        if (!$check_st_profile || mysqli_num_rows($check_st_profile) === 0) {
+            @mysqli_query($con, "
+                INSERT INTO `students` (`user_id`, `roll_no`, `department_id`, `course_id`, `course`, `semester`, `dob`, `gender`, `address`)
+                VALUES (5, '24BCS12641', 1, 2, 'BCA', 4, '2004-06-15', 'Male', 'Campus Block 4, Tech City')
+                ON DUPLICATE KEY UPDATE `roll_no`='24BCS12641', `course`='BCA', `semester`=4
+            ");
+        }
     }
 }
 

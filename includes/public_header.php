@@ -25,15 +25,14 @@ if (!isset($page_title)) {
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Font Awesome 6 Icons (Dual CDN + SVG Auto-Replace for 100% Reliability) -->
-    <!-- Font Awesome Local (Ad-blocker & Firewall Proof) -->
-    <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
-    <!-- Font Awesome Fallback CDNs -->
+    <!-- Zero-Tofu Font Awesome (1: Embedded Base64 Fonts, 2: Local SVG Engine, 3: Vector Fallback) -->
+    <link rel="stylesheet" href="assets/css/fontawesome-embedded.css">
+    <script defer src="assets/vendor/fontawesome/js/all.min.js"></script>
+    <script defer src="assets/js/icon-fixer.js"></script>
+    
+    <!-- Secondary Online Fallback CDNs -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
-    <!-- Font Awesome SVG with JS Fallback -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/js/all.min.js"></script>
     
     <!-- Animate On Scroll (AOS) -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">

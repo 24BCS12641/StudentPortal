@@ -128,6 +128,29 @@ body, button, input, select, textarea {
     font-style: normal !important;
 }
 
+/* SVG Vector Icon Normalization */
+.svg-inline--fa,
+.portal-svg-icon {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+    flex-shrink: 0;
+}
+
+.svg-inline--fa {
+    fill: currentColor;
+}
+
+.portal-svg-icon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 /* Seamless Font Awesome SVG Auto-Upgrade */
 svg.svg-inline--fa {
     display: inline-block;
@@ -228,6 +251,14 @@ a:hover {
     transition: var(--transition);
 }
 
+.brand-icon svg,
+.brand-icon .svg-inline--fa,
+.brand-icon .portal-svg-icon {
+    width: 24px;
+    height: 24px;
+    color: #ffffff;
+}
+
 .sidebar-brand:hover .brand-icon {
     transform: rotate(5deg) scale(1.05);
 }
@@ -287,12 +318,20 @@ a:hover {
     position: relative;
 }
 
-.nav-link i {
+.nav-link i,
+.nav-link svg,
+.nav-link .svg-inline--fa,
+.nav-link .portal-svg-icon {
     font-size: 17px;
-    width: 22px;
+    width: 20px;
+    height: 20px;
     text-align: center;
     color: #94a3b8;
     transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .nav-link:hover {
@@ -301,7 +340,10 @@ a:hover {
     transform: translateX(5px);
 }
 
-.nav-link:hover i {
+.nav-link:hover i,
+.nav-link:hover svg,
+.nav-link:hover .svg-inline--fa,
+.nav-link:hover .portal-svg-icon {
     color: #93c5fd;
 }
 
@@ -312,7 +354,10 @@ a:hover {
     box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
 }
 
-.nav-link.active i {
+.nav-link.active i,
+.nav-link.active svg,
+.nav-link.active .svg-inline--fa,
+.nav-link.active .portal-svg-icon {
     color: #ffffff;
 }
 
@@ -616,6 +661,13 @@ a:hover {
     color: #ffffff;
 }
 
+.hero-badge-item svg,
+.hero-badge-item .svg-inline--fa,
+.hero-badge-item .portal-svg-icon {
+    width: 15px;
+    height: 15px;
+}
+
 /* ==========================================================================
    Stats Cards Grid
    ========================================================================== */
@@ -699,6 +751,13 @@ a:hover {
     font-size: 24px;
     flex-shrink: 0;
     transition: var(--transition);
+}
+
+.stat-icon-wrapper svg,
+.stat-icon-wrapper .svg-inline--fa,
+.stat-icon-wrapper .portal-svg-icon {
+    width: 26px;
+    height: 26px;
 }
 
 .stat-card:hover .stat-icon-wrapper {

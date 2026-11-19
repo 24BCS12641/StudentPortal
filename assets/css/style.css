@@ -69,12 +69,21 @@ body, button, input, select, textarea {
 }
 
 /* Seamless Font Awesome SVG Auto-Upgrade */
-svg.svg-inline--fa {
+svg.svg-inline--fa,
+svg.portal-svg-icon {
     display: inline-block;
     height: 1.1em;
-    width: auto;
+    width: 1.1em;
     overflow: visible;
     vertical-align: -0.15em;
+}
+
+.portal-svg-icon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 body {

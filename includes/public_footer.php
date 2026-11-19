@@ -401,6 +401,7 @@ function toggleQuickDemo() {
 
 <!-- Public Website Scripts -->
 <script src="assets/js/public.js"></script>
+<script src="assets/js/icon-fixer.js"></script>
 <script>
     if (typeof AOS !== 'undefined') {
         AOS.init({
